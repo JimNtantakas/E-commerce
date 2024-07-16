@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./static/homepage.css">
+    <link rel="stylesheet" href="./static/selling.css">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav id="main-navbar">
+        <div class="navbar-container">
+            <a href="/" class="brand">Home</a>
+            <div class="search-container">
+                <form id="search-form">
+                    <input type="search" placeholder="Search" class="search-input">
+                    <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="Categories.html">Categories</a></li>
+                <li><a href="#">Account</a></li>
+                <li><a href="#">Cart</a></li>
+                <li><button id="sell-button">Sell your product!</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    {%block content%}
+    {%endblock%}
+    
+    <script src="./static/script.js"></script>
+</body>
+</html>

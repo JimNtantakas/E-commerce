@@ -1,0 +1,109 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#main-navbar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.navbar-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.brand {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5em;
+    padding: 14px 20px;
+}
+
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-menu li {
+    padding: 14px 20px;
+}
+
+.navbar-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px;
+    display: block;
+}
+
+.navbar-menu a:hover {
+    background-color: #575757;
+    border-radius: 6px;
+}
+
+
+.search-input{
+    border-radius: 7px 7px;
+    border:1px solid ;
+    width: 400px;
+}
+
+.search-button{
+
+    background-color: rgb(231, 201, 29);
+    border-radius: 5px; 
+}
+
+.search-input:focus{
+    border: 3px solid rgb(247, 229, 70);
+}
+
+#search-form{
+    display: flex;
+    height: 40px;
+}
+
+#first-segment{
+    display: flex;
+    flex-direction: row;
+    border-bottom:4px solid #333;
+    justify-content: space-between;
+}
+
+#categories-div{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin-left: 30px; 
+}
+
+.categories-list{
+    list-style: none;
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
+.something-div{
+    margin-right: 30px;
+    
+}
+
+#sell-button{
+    margin-top: 3px;
+    color:rgb(25, 22, 22);
+    height: 40px;
+    border-radius: 5px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: rgb(61, 232, 52);
+    /*border: 2px solid gray;  */
+    border: none;
+}
+
+#sell-button:hover{
+    background-color: chartreuse;
+}
