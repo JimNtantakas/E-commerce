@@ -12,16 +12,16 @@ body{
     flex-direction: column;
     box-sizing: border-box;
     align-items: center;
-    background: url("uploads/mountain-sky.jpg");
+    background: url("uploads/rocks.jpg");
     background-size: cover;
     background-position: center;
 }
 
-.login-div h1{
+.register-div h1{
     text-align: center;
 }
 
-.login-div {
+.register-div {
     background: rgb(112, 6, 112);
     width: 420px;
     color: white;
@@ -32,7 +32,7 @@ body{
     backdrop-filter: blur(40px);
 }
 
-.login-div .input-box{
+.register-div .input-box{
     position: relative;
     height: 50px;
     width: 100%;
@@ -63,7 +63,7 @@ body{
     transform: translateY(-50%);
 }
 
-.login-div .remember-me{
+.register-div .remember-me{
     display: flex;
     justify-content: space-between;
     font-size: 16px;
@@ -79,7 +79,7 @@ body{
     text-decoration: underline;
 }
 
-.login-button{
+.register-button{
     width: 100%;
     border-radius: 40px;
     height: 45px;    
@@ -107,6 +107,4 @@ body{
 li{
     margin-top: 20px;
     color: rgb(175, 1, 1);
-    text-align: center;
-    list-style: none;
 }

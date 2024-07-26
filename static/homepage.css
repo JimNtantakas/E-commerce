@@ -1,109 +1,83 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+#first-frame{
+    margin: 30px 20px;
+    height: 40vh;
+    box-sizing: border-box;
+   
 }
 
-#main-navbar {
-    background-color: #333;
-    overflow: hidden;
+body{
+    min-height: 200vh;
+    box-sizing: border-box;
 }
 
-.navbar-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.brand {
-    color: white;
-    text-decoration: none;
-    font-size: 1.5em;
-    padding: 14px 20px;
-}
-
-.navbar-menu {
+.product-list{
     list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-.navbar-menu li {
-    padding: 14px 20px;
-}
-
-.navbar-menu a {
-    color: white;
-    text-decoration: none;
-    padding: 14px 20px;
-    display: block;
-}
-
-.navbar-menu a:hover {
-    background-color: #575757;
-    border-radius: 6px;
-}
-
-
-.search-input{
-    border-radius: 7px 7px;
-    border:1px solid ;
-    width: 400px;
-}
-
-.search-button{
-
-    background-color: rgb(231, 201, 29);
-    border-radius: 5px; 
-}
-
-.search-input:focus{
-    border: 3px solid rgb(247, 229, 70);
-}
-
-#search-form{
-    display: flex;
-    height: 40px;
-}
-
-#first-segment{
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
     display: flex;
     flex-direction: row;
-    border-bottom:4px solid #333;
-    justify-content: space-between;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
-#categories-div{
+
+.product{
+    margin-right: 40px;
+    background-color: rgb(248, 246, 241);
     display: flex;
     flex-direction: column;
-    width: 30%;
-    margin-left: 30px; 
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    min-width: 200px;
+    border-radius: 10px;
+    position: relative;
 }
 
-.categories-list{
-    list-style: none;
-    font-family: sans-serif;
+.product-list::-webkit-scrollbar {
+    height: 10px;
+}
+
+.product-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.product-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.trending-icon{
+    background-color: #40cffb;
+    border-radius: 10px;
+    margin-right: 7px;
+}
+
+.product-image{
+    width: 80%;
+    height: 100%;
+}
+
+.like-button{
+    position: absolute; /* Absolute positioning for the button */
+    top: 10px; /* Position the button 10px from the top */
+    right: 10px; /* Position the button 10px from the right */
+    padding: 5px 10px; /* Example padding for the button */
+    border-radius: 40px;
+    border: 1px solid black;
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 18px;
+}
+
+.like-button:hover{
+    color: red;
     font-size: 20px;
 }
 
-.something-div{
-    margin-right: 30px;
-    
-}
-
-#sell-button{
-    margin-top: 3px;
-    color:rgb(25, 22, 22);
-    height: 40px;
-    border-radius: 5px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    background-color: rgb(61, 232, 52);
-    /*border: 2px solid gray;  */
-    border: none;
-}
-
-#sell-button:hover{
-    background-color: chartreuse;
+.like-button.liked {
+    background-color: #e74c3c; /* Background color when liked (red) */
+    color: white; /* Text color when liked */
+    border: 1px solid #c0392b; /* Border color when liked */
 }

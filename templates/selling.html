@@ -1,31 +1,33 @@
 {% extends "base.html" %}
 
+{% block css %}<link rel="stylesheet" href="./static/selling.css">{% endblock %}
+
 {% block content %}
-
-
-<form id="selling-form" method="POST" action="/submit">
-    <h2 class="selling-font">Sell your product here</h2>
+<form id="selling-form" method="POST" action="/submit" enctype="multipart/form-data">
+    <h1 class="selling-font">Sell your product here</h1>
     <div id="main-div">
         <div class="selling-form-items">
             <h3 class="selling-font">Title</h3>
-            <input type="text" class="selling-form-inputs" name="title">   
+            <input type="text" class="selling-form-inputs" name="title" placeholder="Title" required>   
         </div>
         <div class="selling-form-items">
             <h3>Add your photos here</h3>
-            <input type="file" class="selling-form-inputs" name="photos" accept="image/*">
+            <input type="file" class="selling-form-inputs" name="photos" accept="image/*" multiple>
         </div>
         <div class="selling-form-items">
             <h3>Select Categories and tags</h3>
-            <select class="selling-form-inputs" name="categories">
+            <select class="selling-form-inputs" name="categories" required>
                 <option value="category1">Category1</option>
                 <option value="category2">Category2</option>
                 <option value="category3">Category3</option>
             </select>
-     
         </div>
         <div class="selling-form-items">
-            <button type="submit" class="selling-submit-button">Submit</button>
+            <textarea class="selling-form-inputs" name='description' placeholder="Write a description" required></textarea>
         </div>
+
+        <button type="submit" class="selling-submit-button">Submit</button>
+        
 
     </div>
     </form>

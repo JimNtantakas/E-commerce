@@ -1,20 +1,23 @@
 {% extends "base.html" %}
+{% block css%}<link rel="stylesheet" href="./static/homepage.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{%endblock%}
 {% block content %}
-<div id="first-segment">
-    <nav id="categories-div">
-        <h2>Trendings</h2>
-        <ol class="categories-list">
-            <li>Category1</li>
-            <li>Category2</li>
-            <li>Category3</li>
-            <li>Category4</li>
-            <li>Category5</li>
-            <li>Category6</li>
-            <li>Category7</li>
-        </ol>
-    </nav>
 
-    <div class="something-div">
-    </div>
+
+<div id="first-frame">
+    <h1><i class='bx bx-trending-up trending-icon'></i>Trendings</h1>
+    <ul class="product-list">
+            {% for product in products %}
+            <li class="product">
+                <button id="like-button-{{product._id}}" class="like-button  {% if product._id in user_liked_products %}liked{% endif %}" type="submit" ><i class='bx bx-heart'></i></button>
+                <img class="product-image" src="{{ url_for('photo', photo_id=product.photos[0]) }}" alt="Product Photo">
+                <h2>{{ product.title }}</h2>
+            </li>
+            {% endfor %}
+    </ul>
 </div>
+
+
+<script src="./static/script.js"></script>
 {% endblock %}

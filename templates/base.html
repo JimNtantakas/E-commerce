@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./static/homepage.css">
-    <link rel="stylesheet" href="./static/selling.css">
+    <link rel="stylesheet" href="./static/base.css">
     <title>{% block title %}{% endblock %}</title>
+    {% block css %}{% endblock %}
 </head>
 <body>
     <nav id="main-navbar">
         <div class="navbar-container">
             <a href="/" class="brand">Home</a>
             <div class="search-container">
-                <form id="search-form">
+                <form id="search-form" action="/search">
                     <input type="search" placeholder="Search" class="search-input">
                     <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
                 </form>
             </div>
             <ul class="navbar-menu">
-                <li><a href="{{page}}">{{x}}</a></li>
+                <li><a href="{{ url_for(page) }}">{{x}}</a></li>
                 <li><a href="Categories.html">Categories</a></li>
                 <li><a href="#">Cart</a></li>
                 <li><button id="sell-button">Sell your product!</button></li>
@@ -30,6 +30,5 @@
     {%block content%}
     {%endblock%}
     
-    <script src="./static/script.js"></script>
 </body>
 </html>
