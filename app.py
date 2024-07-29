@@ -21,6 +21,15 @@ def photo(photo_id):
     return photo
     #return send_file(io.BytesIO(photo.read()), mimetype=photo.content_type)
 
+def get_liked_products():
+    user_liked_products = []
+    user = users.find_one({"username": session["username"]})
+    liked_products_ids = user.get('liked_products', [])
+    for id in liked_products_ids:
+        user_liked_products.append(products.find_one({"_id": ObjectId(id)}))
+        
+    return user_liked_products
+
 
 @app.route("/")
 def home():
@@ -40,10 +49,10 @@ def home():
         
 @app.route("/selling")
 def selling():
-    if session.get("username"):
-        return render_template("selling.html", x="Account", page="account")
-    else:
-        return render_template("login.html")
+    if not session.get("username"):
+        return redirect(url_for('login', next=request.url))
+    return render_template("selling.html", x="Account", page="account")
+ 
 
 
 @app.route("/submit", methods=['POST'])
@@ -69,7 +78,11 @@ def submit():
 
 @app.route("/account.html")
 def account():
-    return render_template("account.html")
+    if session.get("username"):
+        liked = get_liked_products()
+        return render_template("account.html",x="Account",liked_products=liked)
+    else:
+        return redirect(url_for('login', next=request.url))
 
 
 @app.route("/login", methods=['GET','POST'])
@@ -80,10 +93,12 @@ def login():
         user = users.find_one({"username": username})
         if user and check_password_hash(user['password'], password):
             session['username'] = username
-            return redirect(url_for('home'))
+            next_url = request.form.get('next')  # Retrieve 'next' from form data
+            return redirect(next_url or url_for('home'))
         else:           
             flash('Invalid username or password!', 'danger')
-    return render_template("login.html")
+    next_url = request.args.get('next')
+    return render_template('login.html', next=next_url)
     
     
 @app.route("/register", methods=['GET','POST'])
@@ -139,6 +154,8 @@ def like():
         
     updated_product = products.find_one({"_id": ObjectId(product_id)})
     return jsonify({"success": True, "liked": liked, "likes": updated_product["likes"], "message": message})
+
+
 
 
 
