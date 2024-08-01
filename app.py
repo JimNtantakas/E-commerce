@@ -14,6 +14,10 @@ products = db['products']
 users = db['users']
 fs = gridfs.GridFS(db)
 
+@app.before_request
+def save_last_visited_page():
+    if request.endpoint not in ('login', 'static','photo') and request.method == 'GET':
+        session['last_url'] = request.url
 
 @app.route('/photo/<photo_id>')
 def photo(photo_id):
@@ -21,14 +25,22 @@ def photo(photo_id):
     return photo
     #return send_file(io.BytesIO(photo.read()), mimetype=photo.content_type)
 
+
+
+@app.route('/liked-products', methods=['GET'])
 def get_liked_products():
     user_liked_products = []
     user = users.find_one({"username": session["username"]})
     liked_products_ids = user.get('liked_products', [])
     for id in liked_products_ids:
-        user_liked_products.append(products.find_one({"_id": ObjectId(id)}))
-        
-    return user_liked_products
+        product = products.find_one({"_id": ObjectId(id)})
+        if product:
+            product['_id'] = str(product['_id'])
+            product['photos'] = [str(photo_id) for photo_id in product['photos']]
+            user_liked_products.append(product)
+            #product['photos'] = str(product['photos'][0])
+
+    return (user_liked_products)
 
 
 @app.route("/")
@@ -50,7 +62,7 @@ def home():
 @app.route("/selling")
 def selling():
     if not session.get("username"):
-        return redirect(url_for('login', next=request.url))
+        return redirect(url_for('login'))
     return render_template("selling.html", x="Account", page="account")
  
 
@@ -76,13 +88,13 @@ def submit():
     return render_template("submit.html",x="Account" ,page="account")
 
 
-@app.route("/account.html")
+@app.route("/account")
 def account():
     if session.get("username"):
         liked = get_liked_products()
-        return render_template("account.html",x="Account",liked_products=liked)
+        return render_template("account.html",x="Account",liked_products=liked, page="account")
     else:
-        return redirect(url_for('login', next=request.url))
+        return redirect(url_for('login'))
 
 
 @app.route("/login", methods=['GET','POST'])
@@ -93,12 +105,10 @@ def login():
         user = users.find_one({"username": username})
         if user and check_password_hash(user['password'], password):
             session['username'] = username
-            next_url = request.form.get('next')  # Retrieve 'next' from form data
-            return redirect(next_url or url_for('home'))
+            return redirect(session.get('last_url') or url_for('home'))
         else:           
             flash('Invalid username or password!', 'danger')
-    next_url = request.args.get('next')
-    return render_template('login.html', next=next_url)
+    return render_template('login.html')
     
     
 @app.route("/register", methods=['GET','POST'])

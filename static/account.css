@@ -1,0 +1,121 @@
+body{
+    min-height: 150vh;
+    max-width: 100vw;
+}
+
+
+#main-div{
+    height: 150vh;
+    width: 100vw;
+    display: flex;
+    flex-direction:column ;
+    justify-content: center;
+    align-items: center;
+    background: url("uploads/white-back.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+#account-div{
+    height: 95%;
+    width: 95%;
+    background-color: rgb(193, 138, 244);
+    border-radius: 40px;
+    display: flex;
+    flex-direction: row;
+    background: transparent;
+    backdrop-filter: blur(20px);
+    border: 2px solid white;
+    /*justify-content: space-around;  */
+    position: relative;
+    /*align-items: center;  */
+}
+
+.account-navs{
+    border-radius: 20px;
+    margin-top: 70px;
+    background-color: white;
+}
+
+#sidebar{
+    position: absolute;
+    left: 40px;
+    width: 20%;
+}
+
+#main-content{
+    position: absolute;
+    right:30px;
+    width: 60%;
+    background: transparent;
+   backdrop-filter: 40px;
+}
+
+#sidebar-list{
+    list-style: none;
+    padding: 0;
+}
+
+#sidebar-list .sidebar-element{
+   height: 60px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+
+}
+
+.sidebar-element-button{
+    text-align: center;
+    border: none;
+    background-color: white;
+    font-size: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin:0 30px;
+}
+
+.sidebar-element-button:hover{
+    background-color: rgb(228, 228, 228);
+    border-radius: 40px;
+}
+
+
+
+#main-content .liked-products-list{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.liked-product-image{
+    /*max-width: 260px;
+    max-height: 260px; */
+    height: 200px;
+    width: 200px;
+    /*width: auto;
+    height: auto; */
+    object-fit: cover;
+}
+
+.liked-products-list li{
+    padding: 0;
+    margin-left:30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+li a{
+    align-self: center;
+    text-decoration: none;
+  
+}
+
+.liked-products-list li a:hover{
+    text-decoration: underline;
+}
+
+.empty-message{
+    font-size: 18px;
+}

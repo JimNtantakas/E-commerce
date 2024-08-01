@@ -42,7 +42,7 @@ body{
 
 .product-list::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 5px;
+    border-radius: 0px;
 }
 
 .product-list::-webkit-scrollbar-thumb:hover {
@@ -56,28 +56,13 @@ body{
 }
 
 .product-image{
-    width: 80%;
-    height: 100%;
+    max-width: 150px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    object-fit: cover;
 }
 
-.like-button{
-    position: absolute; /* Absolute positioning for the button */
-    top: 10px; /* Position the button 10px from the top */
-    right: 10px; /* Position the button 10px from the right */
-    padding: 5px 10px; /* Example padding for the button */
-    border-radius: 40px;
-    border: 1px solid black;
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 18px;
-}
 
-.like-button:hover{
-    color: red;
-    font-size: 20px;
-}
 
-.like-button.liked {
-    background-color: #e74c3c; /* Background color when liked (red) */
-    color: white; /* Text color when liked */
-    border: 1px solid #c0392b; /* Border color when liked */
-}
+

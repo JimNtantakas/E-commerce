@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block css%}
+<link rel="stylesheet" href="./static/account.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="./static/like-button.css">
+{%endblock%}
+
+{% block content%}
+
+<div id="main-div">
+    <div id="account-div">
+        <nav id="sidebar" class="account-navs">
+            <ul id="sidebar-list">
+                <li class="sidebar-element"><button class="sidebar-element-button" id="orders-btn" type="submit">Orders</button></li>
+                <li class="sidebar-element"><button class="sidebar-element-button" id="wishlist-btn" type="submit">Wishlist</button></li>
+                <li class="sidebar-element"><button class="sidebar-element-button" id="ratings-btn" type="submit">Ratings</button></li>
+                <li class="sidebar-element"><button class="sidebar-element-button" id="tbd1-btn" type="submit">TBD</button></li>
+                <li class="sidebar-element"><button class="sidebar-element-button" id="tbd2-btn" type="submit">TBD</button></li>
+            </ul>
+        </nav>
+        <nav id="main-content" class="account-navs">
+            {% for product in liked_products %}
+                <div>{{product.title}}<div>
+            {% endfor %}
+        </nav>
+    </div>
+</div>
+
+{% block scripts %} 
+<script src="./static/account.js"></script>
+<script src="./static/account-like-button.js"></script>
+{% endblock %}
+
+{% endblock %}
+
+
+
+
+
+
+
+

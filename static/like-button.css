@@ -1,0 +1,27 @@
+.like-button{
+    position: absolute; /* Absolute positioning for the button */
+    top: 10px; /* Position the button 10px from the top */
+    right: 10px; /* Position the button 10px from the right */
+    padding: 5px 10px; /* Example padding for the button */
+    border-radius: 40px;
+    border: 1px solid black;
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 18px;
+}
+
+.like-button:hover{
+    color: red;
+    font-size: 20px;
+}
+
+.like-button.liked {
+    background-color: #e74c3c; 
+    color: white; 
+    border: 1px solid #c0392b; 
+}
+
+.like-button.unliked {
+    background-color: none; 
+    color: black; 
+    border: 1px solid black;
+}
