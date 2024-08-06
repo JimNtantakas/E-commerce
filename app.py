@@ -4,6 +4,7 @@ import gridfs
 from werkzeug.security import generate_password_hash, check_password_hash
 import io
 from bson.objectid import ObjectId
+from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = 'Mysecretkey'
@@ -16,7 +17,8 @@ fs = gridfs.GridFS(db)
 
 @app.before_request
 def save_last_visited_page():
-    if request.endpoint not in ('login', 'static','photo') and request.method == 'GET':
+    if request.endpoint not in ('login', 'static/js/like-button.js','static','photo') and request.method == 'GET':
+        print(f"Saving URL: {request.url}")
         session['last_url'] = request.url
 
 @app.route('/photo/<photo_id>')
@@ -38,25 +40,26 @@ def get_liked_products():
             product['_id'] = str(product['_id'])
             product['photos'] = [str(photo_id) for photo_id in product['photos']]
             user_liked_products.append(product)
-            #product['photos'] = str(product['photos'][0])
 
     return (user_liked_products)
 
-
-@app.route("/")
-def home():
-    all_products = products.find()
+def get_user_liked_products():
     if session.get("username"):
         user = users.find_one({"username": session["username"]})
         user_liked_products = user.get('liked_products', [])
     else:
         user_liked_products=[]
+    return user_liked_products
+
+@app.route("/")
+def home():
+    all_products = products.find()
     return render_template(
         "homepage.html",
         x="Account" if session.get("username") else "Login",
         page="account" if session.get("username") else "login",
         products=all_products,
-        user_liked_products=user_liked_products
+        user_liked_products=get_user_liked_products()
     )
         
 @app.route("/selling")
@@ -69,11 +72,15 @@ def selling():
 
 @app.route("/submit", methods=['POST'])
 def submit():
+    seller_username = session.get("username")
+    user = users.find_one({"username": seller_username})
+    seller_id = user['_id']
     title = request.form.get("title")
     categories = request.form.get("categories") 
     description = request.form.get("description")
     photo_ids = []
     files = request.files.getlist('photos')
+    price = request.form.get('price')
     for file in files:
         if file:
             photo_id = fs.put(file, filename=file.filename)
@@ -82,7 +89,9 @@ def submit():
                "categories": categories,
                "description": description,
                "photos": photo_ids,
-               "likes": 0
+               "likes": 0,
+               "seller_id": seller_id,
+               "price": price
                }
     products.insert_one(product)
     return render_template("submit.html",x="Account" ,page="account")
@@ -174,13 +183,35 @@ def logout():
     session.pop("username", None)
     return redirect(url_for('home'))
 
+    
 
-#@app.route("/search")
-#def search():
-#    pass
+@app.route("/products/<product_id>")
+def product_details(product_id):
+    product = products.find_one({"_id": ObjectId(product_id)})
+    user_liked_products = get_user_liked_products()
+    liked = False
+    if product['_id'] in user_liked_products:
+        liked = True
+    if product:
+        return render_template(
+            "products.html",
+            product=product,
+            x="Account" if session.get("username") else "Login",
+            page="account" if session.get("username") else "login",
+            liked= liked
+        )
+    else:
+        return "Product not found", 404
     
 
 
+#@app.route("/search", methods=['GET'])
+#def search():
+#      pass
+   
+   
+   
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

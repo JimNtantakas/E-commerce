@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block css %}<link rel="stylesheet" href="./static/selling.css">{% endblock %}
+{% block css %}<link rel="stylesheet" href="./static/css/selling.css">{% endblock %}
 
 {% block content %}
 <form id="selling-form" method="POST" action="/submit" enctype="multipart/form-data">
@@ -8,11 +8,11 @@
     <div id="main-div">
         <div class="selling-form-items">
             <h3 class="selling-font">Title</h3>
-            <input type="text" class="selling-form-inputs" name="title" placeholder="Title" required>   
+            <input type="text" class="selling-form-inputs" name="title" placeholder="Title" maxlength="30" required>   
         </div>
         <div class="selling-form-items">
             <h3>Add your photos here</h3>
-            <input type="file" class="selling-form-inputs" name="photos" accept="image/*" multiple>
+            <input type="file" class="selling-form-inputs" name="photos" accept="image/*" maxlength="1" multiple>
         </div>
         <div class="selling-form-items">
             <h3>Select Categories and tags</h3>
@@ -23,12 +23,19 @@
             </select>
         </div>
         <div class="selling-form-items">
-            <textarea class="selling-form-inputs" name='description' placeholder="Write a description" required></textarea>
+            <textarea class="selling-form-inputs description" name='description' placeholder="Write a description" maxlength="1000" required></textarea>
+            <p class="char-count">0/1000</p>
+        </div>
+        <div class="selling-form-items">
+            <input type="number" class="selling-form-inputs" placeholder="Price">
         </div>
 
         <button type="submit" class="selling-submit-button">Submit</button>
         
 
     </div>
-    </form>
+</form>
+{% block scripts%}
+    <script src="./static/js/selling.js"></script>
+{% endblock %}
 {% endblock content %}

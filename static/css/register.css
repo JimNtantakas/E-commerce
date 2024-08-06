@@ -12,7 +12,7 @@ body{
     flex-direction: column;
     box-sizing: border-box;
     align-items: center;
-    background: url("uploads/rocks.jpg");
+    background: url("../uploads/rocks.jpg");
     background-size: cover;
     background-position: center;
 }

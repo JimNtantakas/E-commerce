@@ -11,7 +11,7 @@ body{
     flex-direction:column ;
     justify-content: center;
     align-items: center;
-    background: url("uploads/white-back.jpg");
+    background: url("../uploads/white-back.jpg");
     background-size: cover;
     background-position: center;
 }
@@ -96,6 +96,7 @@ body{
     /*width: auto;
     height: auto; */
     object-fit: cover;
+    background-position: center;
 }
 
 .liked-products-list li{
@@ -109,8 +110,9 @@ body{
 li a{
     align-self: center;
     text-decoration: none;
-  
 }
+
+
 
 .liked-products-list li a:hover{
     text-decoration: underline;
@@ -118,4 +120,22 @@ li a{
 
 .empty-message{
     font-size: 18px;
+}
+
+.like-button{
+    position: absolute; /* Absolute positioning for the button */
+    top: 10px; /* Position the button 10px from the top */
+    right: 10px; /* Position the button 10px from the right */
+}
+
+
+.liked-product-item{
+    max-width: 200px;
+}
+
+.liked-product-title{
+    width: 100%;
+    word-wrap: break-word;
+    /* overflow-wrap: break-word;  */
+    white-space: normal;
 }

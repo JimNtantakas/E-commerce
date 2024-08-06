@@ -1,5 +1,5 @@
 body{
-    background: url("uploads/tbee.jpg") ;
+    background: url("../uploads/tbee.jpg") ;
     background-size: cover;
     background-position: center;
     min-height: 100vh;
@@ -71,4 +71,9 @@ h1 {
     text-align: center;
     padding-bottom: 10px;
     border-bottom: 2px solid grey;
+}
+
+.description{
+    resize: none;
+    height: 200px;
 }

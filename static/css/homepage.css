@@ -31,7 +31,7 @@ body{
     justify-content: center;
     align-items: center;
     padding-top: 10px;
-    min-width: 200px;
+    min-width: 250px;
     border-radius: 10px;
     position: relative;
 }
@@ -56,13 +56,33 @@ body{
 }
 
 .product-image{
-    max-width: 150px;
-    max-height: 150px;
-    width: auto;
-    height: auto;
+    /*max-width: 260px;
+    max-height: 260px; */
+    height: 200px;
+    width: 200px;
+    /*width: auto;
+    height: auto; */
     object-fit: cover;
+    background-position: center;
 }
 
 
+.like-button{
+    position: absolute; /* Absolute positioning for the button */
+    top: 10px; /* Position the button 10px from the top */
+    right: 10px; /* Position the button 10px from the right */
+}
 
+.title {
+    width: 100%; 
+    text-align: center; 
+}
 
+.title a {
+    display: block; 
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    padding: 5px; 
+    white-space: normal;
+    padding: 0 10px;
+}

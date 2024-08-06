@@ -1,0 +1,138 @@
+#body-div{
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    min-height: 120vh;
+}
+
+.images-list{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.product-images{
+    height: 60px;
+    width: 60px;
+    /*object-fit: cover;
+    background-position: center; */
+    border-radius: 10px;
+}
+
+.image-element{
+    margin-top: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    border: 2px solid rgb(196, 194, 194);
+   border-radius: 20px;
+}
+
+.image-element:hover{
+    border-color: black;
+    cursor: pointer;
+}
+
+#main-image{
+    margin-top: 10px;
+    height: auto;
+    width: 500px;
+    margin-left: 50px;
+
+    border-radius: 10px;
+    position: relative;
+}
+
+.product-details{
+    margin-top: 10px;
+    margin-left: 100px;
+}
+
+.product-title{
+    display: flex;
+    flex-wrap: wrap;
+    /*background-color: blueviolet; */
+    max-width: 500px;
+}
+
+.first-segmend{
+    display: flex;
+    flex-direction: row;
+}
+
+.like-button{
+    margin-left: 20px;
+    max-height: 40px;
+    width: 50px;
+    position: absolute;
+    top: 20px; /* Position the button 10px from the top */
+    right: 15px; /* Position the button 10px from the right */
+    height: 50px;
+}
+
+.main-image-container{
+    position: relative;
+  
+}
+
+.segmend{
+    border-bottom: 2px solid gray;
+    display: flex;
+    flex-direction: row;
+    max-width: 700px;
+    min-width: 500px;
+    padding: 20px;
+}
+
+.rating-box{
+    background-color: rgb(255, 229, 201);
+    margin: 20px 0;
+    height: 50px;
+    display: flex;
+    justify-content: flex-start;
+    width: 120px;
+    padding: 0 20px;
+    border-radius: 5px;
+}
+
+.bx.bxs-star{
+    align-self: center;
+    color: rgb(255, 172, 82);
+    font-size: 24px;
+}
+
+.rating-box:hover .bxs-star {
+    color:rgb(255, 191, 0);
+    cursor: pointer;
+}
+
+.bx.bxs-pencil a{
+    text-decoration: dotted;
+}
+
+.rate-this-product{
+    margin-left: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.bx.bxs-pencil {
+    font-size: 26px;
+    align-self: center;
+}
+
+.rate-this-product a{
+    align-self: center;
+    font-size: 18px;
+}
+
+.rate-this-product a:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.third-segmend p{
+    width: 100%;
+    word-wrap: break-word;
+}

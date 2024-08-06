@@ -12,8 +12,10 @@ document.querySelectorAll(".like-button").forEach(button =>{
             if (data.success){
                 if (data.liked) {
                     button.classList.add('liked');  // Use class to set liked state
+                    button.classList.remove('unliked');
                 } else {
                     button.classList.remove('liked');  // Remove class for unliked state
+                    button.classList.add('unliked');
                 }
             }
             else{

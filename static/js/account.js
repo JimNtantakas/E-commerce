@@ -26,11 +26,6 @@ wishlist_btn.addEventListener("click", ()=>{
             list.classList.add('liked-products-list');
             data.forEach(product => {
                 const listItem = document.createElement('li');
-                const image = document.createElement('img');
-                image.classList.add('liked-product-image');
-                const title = document.createElement('a');
-                title.text = product.title;
-                title.classList.add('liked-product-title');
                 const like_button = document.createElement('button');
                 like_button.id = `like-button-${product._id}`;
                 like_button.classList.add('like-button','liked');
@@ -38,6 +33,17 @@ wishlist_btn.addEventListener("click", ()=>{
                 const like_icon = document.createElement('i');
                 like_icon.classList.add('bx', 'bx-heart');
                 like_button.appendChild(like_icon);
+
+                //add the links to the products
+                const image_link = document.createElement('a');
+                image_link.href = `/products/${product._id}`;
+                const image = document.createElement('img');
+                image.classList.add('liked-product-image');
+
+                const title = document.createElement('a');
+                title.text = product.title;
+                title.classList.add('liked-product-title','product-delails-link');
+                title.href = `/products/${product._id}`;
             
                 if (product.photos.length > 0) {
                     const photo_id = product.photos[0];  // Assuming you only want the first photo
@@ -45,9 +51,10 @@ wishlist_btn.addEventListener("click", ()=>{
                 } else {
                     image.alt = 'No image available';
                 }
-
+                
+                image_link.appendChild(image);
                 listItem.appendChild(like_button);
-                listItem.appendChild(image);
+                listItem.appendChild(image_link);
                 listItem.appendChild(title);
                 listItem.classList.add('liked-product-item');
                 list.appendChild(listItem);

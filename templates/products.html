@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static',filename='css/like-button.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/products.css')}}">
+{% endblock  %}
+
+{% block content %}
+
+<div id="body-div">
+    <ul class="images-list">
+        {% for photo_id in product.photos%}
+            <li class="image-element">
+                <img class="product-images" id="{{loop.index0}}" src="{{url_for('photo', photo_id=photo_id)}}">
+            </li>
+        {% endfor %}
+        </ul>
+    <div class="main-image-container">
+        <img id="main-image" src="{{url_for('photo', photo_id=product.photos[0])}}">
+        <button id="like-button-{{product._id}}" class="like-button  {% if liked %}liked{% endif %}" type="submit" ><i class='bx bx-heart'></i></button>
+    </div >
+    <div class="product-details">
+        <div class="first-segmend segmend">
+            <div class="product-title"><h1>{{product.title}}</h1></div>
+        </div>
+        <div class="segmend">
+            <div class="rating-box">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+            </div>
+            <div class="rate-this-product">
+                <i class='bx bxs-pencil'></i>
+                <a>Rate this product</a>
+            </div>
+        </div>
+        <div class="segmend third-segmend">
+            <p>{{product.description}}</p>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/products.js')}}"></script>
+<script src="{{url_for('static',filename='js/like-button.js')}}"></script>
+{% endblock %}
+
+{% endblock content %}

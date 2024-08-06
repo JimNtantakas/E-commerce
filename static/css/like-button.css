@@ -1,7 +1,4 @@
 .like-button{
-    position: absolute; /* Absolute positioning for the button */
-    top: 10px; /* Position the button 10px from the top */
-    right: 10px; /* Position the button 10px from the right */
     padding: 5px 10px; /* Example padding for the button */
     border-radius: 40px;
     border: 1px solid black;
