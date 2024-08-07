@@ -31,7 +31,8 @@ body{
     justify-content: center;
     align-items: center;
     padding-top: 10px;
-    min-width: 250px;
+    /*min-width: 250px;*/
+    width: 320px;
     border-radius: 10px;
     position: relative;
 }
@@ -58,12 +59,13 @@ body{
 .product-image{
     /*max-width: 260px;
     max-height: 260px; */
-    height: 200px;
-    width: 200px;
+    border-radius: 5px;
+    height: 250px;
+    width: 250px;
     /*width: auto;
     height: auto; */
-    object-fit: cover;
-    background-position: center;
+    /*object-fit: cover;
+    background-position: center; */
 }
 
 

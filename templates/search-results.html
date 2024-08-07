@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% for product in results%}
+    <div>{{product.title}}</div>
+{% endfor %}
+
+{% endblock %}

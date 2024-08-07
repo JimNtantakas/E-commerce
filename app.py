@@ -18,7 +18,7 @@ fs = gridfs.GridFS(db)
 @app.before_request
 def save_last_visited_page():
     if request.endpoint not in ('login', 'static/js/like-button.js','static','photo') and request.method == 'GET':
-        print(f"Saving URL: {request.url}")
+        #print(f"Saving URL: {request.url}")
         session['last_url'] = request.url
 
 @app.route('/photo/<photo_id>')
@@ -34,14 +34,17 @@ def get_liked_products():
     user_liked_products = []
     user = users.find_one({"username": session["username"]})
     liked_products_ids = user.get('liked_products', [])
-    for id in liked_products_ids:
-        product = products.find_one({"_id": ObjectId(id)})
-        if product:
-            product['_id'] = str(product['_id'])
-            product['photos'] = [str(photo_id) for photo_id in product['photos']]
-            user_liked_products.append(product)
-
+    if len(liked_products_ids)>0 and session.get('username'):
+        for id in liked_products_ids:
+            product = products.find_one({"_id": ObjectId(id)})
+            if product:
+                product['_id'] = str(product['_id'])
+                product['photos'] = [str(photo_id) for photo_id in product['photos']]
+                product['seller_id'] = str(product['seller_id'])
+                user_liked_products.append(product)
+    #print(user_liked_products)
     return (user_liked_products)
+
 
 def get_user_liked_products():
     if session.get("username"):
@@ -51,9 +54,15 @@ def get_user_liked_products():
         user_liked_products=[]
     return user_liked_products
 
+
 @app.route("/")
 def home():
     all_products = products.find()
+    all_products = list(all_products)
+    for product in all_products:
+        #product["_id"] = str(product["_id"])
+        product['photos'] = [str(photo_id) for photo_id in product['photos']]
+        product['seller_id'] = str(product['seller_id'])
     return render_template(
         "homepage.html",
         x="Account" if session.get("username") else "Login",
@@ -91,10 +100,11 @@ def submit():
                "photos": photo_ids,
                "likes": 0,
                "seller_id": seller_id,
-               "price": price
+               "price": str(price),
+               "views": 0
                }
     products.insert_one(product)
-    return render_template("submit.html",x="Account" ,page="account")
+    return render_template("submit.html",x="Account" ,page="account", product=product)
 
 
 @app.route("/account")
@@ -129,7 +139,7 @@ def register():
         if users.find_one({"username": username}):
             flash('Username already exists!', 'danger')
         else:
-            users.insert_one({"username": username, "password": hashed_password, "liked_products": 0})
+            users.insert_one({"username": username, "password": hashed_password, "liked_products": []})
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('home'))
     return render_template("register.html")
@@ -147,17 +157,31 @@ def like():
     if not product:
         return jsonify({"success": False, "message": "Product not found."}), 404
     
-    if ObjectId(product_id) in user.get('liked_products', []):
-        products.update_one(
-            {"_id": ObjectId(product_id)},
-            {"$inc": {"likes": -1}}
-        )
-        users.update_one(
-            {"_id": user['_id']},
-            {"$pull": {"liked_products": ObjectId(product_id)}},
+    liked_products = user.get('liked_products', [])
+    if liked_products != 0: 
+        if ObjectId(product_id) in user.get('liked_products', []):
+            products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$inc": {"likes": -1}}
             )
-        liked = False
-        message = "You unliked this product."
+            users.update_one(
+                {"_id": user['_id']},
+                {"$pull": {"liked_products": ObjectId(product_id)}},
+                )
+            liked = False
+            message = "You unliked this product."
+        else:
+            products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$inc": {"likes": 1}}
+            )
+            
+            users.update_one(
+                {"_id": user['_id']},
+                {"$push": {"liked_products": ObjectId(product_id)}}
+                )
+            liked = True
+            message = "You liked this product."
     else:
         products.update_one(
             {"_id": ObjectId(product_id)},
@@ -170,7 +194,7 @@ def like():
             )
         liked = True
         message = "You liked this product."
-        
+              
     updated_product = products.find_one({"_id": ObjectId(product_id)})
     return jsonify({"success": True, "liked": liked, "likes": updated_product["likes"], "message": message})
 
@@ -190,8 +214,14 @@ def product_details(product_id):
     product = products.find_one({"_id": ObjectId(product_id)})
     user_liked_products = get_user_liked_products()
     liked = False
-    if product['_id'] in user_liked_products:
-        liked = True
+    
+    products.find_one_and_update(
+        {"_id":ObjectId(product_id)},
+        {"$inc": {"views": 1}}                   
+    )
+    if user_liked_products:
+        if product['_id'] in user_liked_products:
+            liked = True
     if product:
         return render_template(
             "products.html",
@@ -205,11 +235,35 @@ def product_details(product_id):
     
 
 
-#@app.route("/search", methods=['GET'])
-#def search():
-#      pass
-   
-   
+@app.route("/search", methods=['GET'])
+def search():
+    query = request.args.get('query')
+    if len(query) < 3:
+        #flash('Search query must be at least 3 characters long!', 'danger')
+        return redirect(url_for('home'))
+    
+    search_results = products.find({
+        "$or": [
+            {"title": {"$regex": f"\\b{query}\\b", "$options": "i"}},
+            {"categories": {"$regex": f"\\b{query}\\b", "$options": "i"}},
+            {"description": {"$regex": f"\\b{query}\\b", "$options": "i"}}
+        ]
+    })
+
+    search_results = list(search_results)
+    for product in search_results:
+        product['_id'] = str(product['_id'])
+        product['photos'] = [str(photo_id) for photo_id in product['photos']]
+    
+    
+    return render_template(
+        "search-results.html",
+        query=query,
+        results=search_results,
+        x="Account" if session.get("username") else "Login",
+        page="account" if session.get("username") else "login",
+        user_liked_products=get_user_liked_products()
+    )
    
     
 

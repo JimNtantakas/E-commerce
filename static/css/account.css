@@ -12,8 +12,8 @@ body{
     justify-content: center;
     align-items: center;
     background: url("../uploads/white-back.jpg");
-    background-size: cover;
-    background-position: center;
+    /*background-size: cover;
+    background-position: center; */
 }
 
 #account-div{
@@ -95,8 +95,8 @@ body{
     width: 200px;
     /*width: auto;
     height: auto; */
-    object-fit: cover;
-    background-position: center;
+    /*object-fit: cover;
+    background-position: center; */
 }
 
 .liked-products-list li{

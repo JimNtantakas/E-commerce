@@ -1,0 +1,1 @@
+@app.route("/products/<product_id>")
