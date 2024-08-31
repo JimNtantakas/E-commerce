@@ -1,0 +1,106 @@
+.check-container{
+    display: flex;         
+    justify-content: center; 
+    align-items: center;  
+    width: 80px;           
+    height: 80px;          
+    background-color: #65ff36; 
+    border-radius: 400px;
+    margin-left: 20px;
+}
+
+.bx.bx-check{
+    font-size: 40px;        
+    color: #000;   
+}
+
+.submit-informations{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    margin-top: 50px;
+    margin-left: 50px;
+    background-color: white;
+    border-radius: 20px;
+    height: fit-content;
+    padding-bottom: 30px;
+}
+
+.success-text{
+    padding-bottom: 30px;
+    border-bottom: 2px solid grey;
+}
+
+
+.product-image{
+    border-radius: 5px;
+    height: 250px;
+    width: 250px;
+}
+
+
+
+.product-delails-link{
+    display: block; 
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    padding: 5px; 
+    white-space: normal;
+    padding: 0 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.product-delails-link:hover{
+    text-decoration: underline;
+}
+
+.submit-body{
+    background-color: rgb(141, 141, 141);
+    min-height: 100vh;
+    padding-top: 35px;  
+    display: flex;
+    justify-content: center;
+}
+
+.check-container:hover{
+    background-color: rgb(0, 228, 0);
+    transition: 0.7s;
+    .bx.bx-check{
+        transition: 0.7s;
+        color: white;
+    }
+}
+
+.photo1{
+    position: relative;
+}
+
+.more-photos{
+    position: absolute;
+    top: 10px; 
+    left: 160px;
+    color: rgb(126, 255, 66);
+    font-size: 22px;
+    top: 220px;
+}
+
+.back-to-home{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: green;
+    text-decoration: none;
+    border-radius: 20px;
+    height: 50px;
+    color: white;
+    font-size: 20px;
+    width: 60%;
+}
+
+.back-to-home:hover{
+    background-color: rgb(0, 228, 0);
+    transition: 0.4s;
+}

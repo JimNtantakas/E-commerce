@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block css%}
+    <link rel="stylesheet" href="../static/css/submit-informations.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="submit-body">
+    <div class="submit-informations">
+        <div class="check-container"><i class='bx bx-check'></i></div>
+        <h2 class="success-text">You have successfully added your product to the shop!</h2>
+        <a href="/products/{{product._id}}" class="product-delails-link photo1">
+            <img class="product-image" src="{{ url_for('photo', photo_id=product.photos[0]) }}" alt="Product Photo">
+            {% if  ( (product.photos | length-1) > 1 )%}
+                <span class="more-photos">+{{(product.photos | length)-1}} photos</span>
+            {% endif %}
+        </a>
+        <h2 class="title"><a href="/products/{{product._id}}" class="product-delails-link">{{ product.title }}</a></h2>
+        <a href="/products/{{product._id}}" class="product-delails-link"><h2>{{product.price}}€</h2></a>
+        <a href="/" class="back-to-home">Back to homepage</a>
+    </div>
+</div>
+
+
+{% block scripts%}
+    {{ super() }}
+{% endblock %}
+
+{% endblock content %}
+
+
+
+
