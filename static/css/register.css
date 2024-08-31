@@ -104,7 +104,12 @@ body{
     text-decoration: underline;
 }
 
-li{
+li.correct{
     margin-top: 20px;
     color: rgb(104, 255, 28);
+}
+
+li.invalid{
+    margin-top: 20px;
+    color: rgb(226, 43, 43);
 }
