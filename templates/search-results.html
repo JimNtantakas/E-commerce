@@ -1,10 +1,70 @@
 {% extends "base.html" %}
-
-
+{% block css%}
+<link rel="stylesheet" href="./static/css/search-results.css">
+<link rel="stylesheet" href="./static/css/like-button.css">
+{% endblock %}
 {% block content %}
 
-{% for product in results%}
-    <div>{{product.title}}</div>
-{% endfor %}
+{% if not results%}
+    Results not found
+{% endif %}
+
+<div id="search-body">
+    <div class="search-body">
+        <form id="filters-form" method="POST" action="/filter">
+            <nav class="filters-list">
+                <h3>Price range</h3>
+                <div class="price-inputs">
+                    <input name="min-price" class="price-input min" type="number" placeholder="From" value={{min_price}}>
+                    <input name="max-price" class="price-input max" type="number" placeholder="To" value={{max_price}}>
+                    <button class="price-filter-submit-button" type="submit">></button>
+                </div>
+                <input name="query" type="hidden" value={{query}}>
+                <input name="sort_by" type="hidden" id="sort_by" value="{{sort_by}}">  <!-- check this value={{sort_by}} -->
+                <h3 class="filter-title">Short by</h3>
+                <div class="dropdown-container">
+                    <button type="button" class="sort-button closed">{{sort_by}} <i class='bx bx-chevron-up'></i></button>
+                    <ul class="dropdown-list">
+                        <li data-value="Recent">Recent</li>
+                        <li data-value="Ascending">Ascending</li>
+                        <li data-value="Descending">Descending</li>
+                    </ul>
+                </div>
+                <h3 class="filter-title">Clear filters</h3>
+                <button type="button" class="clear-filters-button">Clear</button>
+            </nav>
+        </form >
+
+        <div class="search-results">
+            <ul class="results-list">
+            {% for product in results%}
+                <li class="product">
+                    <a href="/products/{{product._id}}" id="product-image">
+                        <button id="like-button-{{product._id}}" class="like-button  {% if product._id in user_liked_products %}liked{% endif %}" ><i class='bx bx-heart'></i></button>
+                        <img class="result-image" src="{{url_for('photo',photo_id=product.photos[0])}}">
+                    </a>
+                    <p class="title"><a href="/products/{{product._id}}" class="product-delails-link">{{ product.title }}</a></p>
+                    <a href="/products/{{product._id}}" class="product-delails-link"><p>{{product.price}}€</p></a>
+                </li>
+            {% endfor %}
+            <ul>
+        </div>
+
+    </div>
+<div>
+
+{% block scripts %} 
+    {{ super() }}
+    <script src="./static/js/like-button.js"></script>
+    <script src="./static/js/search-results.js"></script>
+    <script>
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation(); 
+                event.preventDefault(); 
+            });
+        });
+    </script>
+{% endblock %}
 
 {% endblock %}
