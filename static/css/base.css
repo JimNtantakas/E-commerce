@@ -54,8 +54,13 @@ body {
 
 .search-input{
     border-radius: 7px 7px;
-    border:1px solid ;
     width: 400px;
+    border: none;
+}
+
+.search-input:focus{
+    outline: none;
+    box-shadow: none; 
 }
 
 .search-button{
@@ -65,6 +70,7 @@ body {
 
 .search-button:hover{
     background-color: yellow;
+    cursor: pointer;
 }
 
 .search-input:focus{
@@ -85,9 +91,27 @@ body {
     background-color: rgb(61, 232, 52);
     /*border: 2px solid gray;  */
     border: none;
+    font-size: 16px;
+    color: white;
 }
 
 #sell-button:hover{
     background-color: chartreuse;
+    cursor: pointer;
 }
 
+#cart{
+    position: relative;
+}
+
+#cart:hover{
+    cursor: pointer;
+}
+
+
+#cart-length{
+    position: absolute;
+    left: 40px;
+    bottom: 20px;
+    color: gold;
+}
