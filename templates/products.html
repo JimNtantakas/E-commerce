@@ -13,7 +13,7 @@
                 <img class="product-images" id="{{loop.index0}}" src="{{url_for('photo', photo_id=photo_id)}}">
             </li>
         {% endfor %}
-        </ul>
+    </ul>
     <div class="main-image-container">
         <img id="main-image" src="{{url_for('photo', photo_id=product.photos[0])}}">
         <button id="like-button-{{product._id}}" class="like-button  {% if liked %}liked{% endif %}" type="submit" ><i class='bx bx-heart'></i></button>
@@ -21,6 +21,16 @@
     <div class="product-details">
         <div class="first-segmend segmend">
             <div class="product-title"><h1>{{product.title}}</h1></div>
+            <ul class="categories_list">
+                {% for category in product.categories %}
+                    <li>
+                        <form method="POST" action="/filter" class="category-form">
+                            <input type="hidden" name="query" value={{category}}>
+                            <button type="submit" class="category">{{category}}</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            <ul>
         </div>
         <div class="segmend">
             <div class="rating-box">
@@ -35,18 +45,48 @@
                 <a>Rate this product</a>
             </div>
         </div>
-        <div class="segmend third-segmend">
+        <div class="segmend description">
             <p>{{product.description}}</p>
         </div>
         <div class="segmend">
-            <h1>{{product.price}}€</h1>
+            <h1 class="price">{{product.price}}€</h1>
+        </div>
+        {% if logged %}
+            <form id="add-to-cart-form" method="POST" action="/add-to-cart">
+                <div class="segmend">      
+                    <input type="hidden" name="product_id" value="{{product._id}}"> 
+                    <button type="submit" data-product-id="{{product._id}}" class="add-to-cart-btn">
+                        {% if in_cart %}
+                            Remove from Cart
+                        {% else %}
+                            Add to Cart
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <div class="segmend">      
+                <button data-product-id="{{product._id}}" class="add-to-cart-btn" id="unlogged">
+                    {% if in_cart %}
+                        Remove from Cart
+                    {% else %}
+                        Add to Cart
+                    {% endif %}
+                </button>
+            </div>
+        {% endif %}
+        <div class="segmend">
+            <i class='bx bx-heart total-likes'></i> 
+            <div class="likes">{{product.likes}}</div>
         </div>
     </div>
 </div>
 
 {% block scripts %}
+{{ super() }}
 <script src="{{url_for('static',filename='js/products.js')}}"></script>
 <script src="{{url_for('static',filename='js/like-button.js')}}"></script>
+<script src="{{url_for('static',filename='js/cart-button.js')}}"></script>
 {% endblock %}
 
 {% endblock content %}
