@@ -7,14 +7,15 @@ document.querySelectorAll(".like-button").forEach(button =>{
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ product_id: productId })
-        }).then(response => response.json())
+        })
+        .then(response => response.json())
         .then(data =>{
             if (data.success){
                 if (data.liked) {
-                    button.classList.add('liked');  // Use class to set liked state
+                    button.classList.add('liked'); 
                     button.classList.remove('unliked');
                 } else {
-                    button.classList.remove('liked');  // Remove class for unliked state
+                    button.classList.remove('liked');  
                     button.classList.add('unliked');
                 }
             }
