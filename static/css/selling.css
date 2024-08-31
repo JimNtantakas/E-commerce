@@ -1,7 +1,9 @@
 body{
-    background: url("../uploads/tbee.jpg") ;
+    /*background: url("../uploads/tbee.jpg") ;
     background-size: cover;
-    background-position: center;
+    background-position: center; 
+    background-color: #dde9f4; */
+    background-color: #e2e9f1;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -19,15 +21,13 @@ body{
     margin-top: 30px;
     margin-left: 20px;
     margin-right: 20px;
-    background-color: rgb(220, 245, 236);
     border-radius: 5px;
-    border: 3px solid black;
     background: transparent;
     backdrop-filter: blur(40px);
 }
 
 .selling-form-items{
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgb(192, 192, 192);
     margin-bottom: 10px;
     width: 95%;
     padding-bottom: 10px;
@@ -36,6 +36,10 @@ body{
     /*align-items: center; */
     flex-direction: column;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: white;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    padding: 20px;
 }
 
 .selling-form-inputs{
@@ -51,29 +55,167 @@ body{
 }
 
 .selling-submit-button{
-    width:30%;
-    border-radius: 4px;
-    border: 1px solid black;
-    height: 1.7rem;
-    align-self: center;
-    border-radius: 40px;
+    border-radius: 5px;
     width: 100%;
-    height: 35px;
+    height: 50px;
     border: none;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: rgb(255, 183, 48);
+    color: white;
+    font-size: 20px;
+    align-self: self-start;
+    margin-bottom: 60px;
 }
 
 .selling-submit-button:hover{
-    background-color: rgb(233, 231, 229);
+    background-color: rgb(255, 133, 52);
 }
+
 
 h1 {
     text-align: center;
     padding-bottom: 10px;
-    border-bottom: 2px solid grey;
+    border-bottom: 1px solid grey;
 }
 
 .description{
     resize: none;
     height: 200px;
+}
+
+.selling-form-inputs{
+    border: 1px solid grey;
+}
+
+h3{
+    font-size: 25px;
+}
+
+
+#images{
+    display: none;
+    width: 30px;
+}
+
+label#upload-images:hover{
+    cursor: pointer;
+    background-color: rgb(255, 133, 52);
+}
+
+label#upload-images{
+    text-transform: uppercase;
+    font-family: sans-serif;
+    background-color: rgb(255, 183, 48);
+    padding: 15px;
+    width: 30%;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
+    height: 25px;
+}
+
+.images-input{
+    display: flex;
+    flex-direction: row;
+}
+
+.selling-submit-button:hover{
+    cursor: pointer;
+}
+
+
+
+/* Dropdown btn */
+.categories_btn{
+    height: 35px;
+    border-radius: 40px;
+    width: 70%;
+    border: 1px solid grey;
+    font-size: 18px;
+    position: relative;
+}
+
+.bx.bx-chevron-up{
+    font-size: 24px;
+    position: absolute;
+    right: 20px;
+}
+
+.categories_btn:hover{
+    cursor: pointer;
+}
+
+
+.dropdown-list {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    position: absolute;
+    width: 66.6%;
+    margin: 0;
+    border-top: none;
+    border: 1px solid black;
+    border-top: 1px solid grey;
+    top: 135px; 
+}
+
+.subcategory{
+    font-size: 18px;
+    padding: 0;
+    margin: 0 0 10px ;
+}
+
+.subcategory:hover{
+    cursor: pointer;
+}
+
+.categories_btn.open{
+    border-radius: 0;
+    background-color: white;
+    border-bottom: none;
+}
+
+.categories_btn.open + .dropdown-list{     
+    display: block;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+
+.dropdown-list li:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-container{
+    position: relative;
+}
+
+.category-class{
+    font-size: 22px;
+    margin: 0;
+    margin-top: 25px;
+    padding: 0;
+}
+
+
+.selected_category{
+    background-color: rgb(74, 152, 255);
+    font-size: 20px;
+    display: block;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 0 5px 10px;
+    color: white;
+}
+
+#selected_categories_list{
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    max-width: 100%;
+    flex-wrap: wrap;
 }

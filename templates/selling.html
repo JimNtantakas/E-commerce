@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% block css %}<link rel="stylesheet" href="./static/css/selling.css">{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="./static/css/selling.css">
+{% endblock %}
 
 {% block content %}
 <form id="selling-form" method="POST" action="/submit" enctype="multipart/form-data">
@@ -8,22 +10,38 @@
     <div id="main-div">
         <div class="selling-form-items">
             <h3 class="selling-font">Title</h3>
-            <input type="text" class="selling-form-inputs" name="title" placeholder="Title" maxlength="30" required>   
+            <input type="text" class="selling-form-inputs" name="title" placeholder="Title" maxlength="30" minlength="3" required>   
         </div>
         <div class="selling-form-items">
             <h3>Add your photos here</h3>
-            <input type="file" class="selling-form-inputs" name="photos" accept="image/*" maxlength="1" multiple>
+            <input type="file" id="images" class="selling-form-inputs" name="photos" accept="image/*" multiple>
+            <div class="images-input">
+                <label for="images" id="upload-images"><i class='bx bx-upload'></i>Upload images</label>
+                <div id="file-list"></div>
+            </div>    
         </div>
-        <div class="selling-form-items">
+
+        <div class="dropdown-container selling-form-items">
             <h3>Select Categories and tags</h3>
-            <select class="selling-form-inputs" name="categories" required>
-                <option value="category1">Category1</option>
-                <option value="category2">Category2</option>
-                <option value="category3">Category3</option>
-            </select>
+            <button type="button" class="categories_btn closed"> Categories <i class='bx bx-chevron-up'></i></button>
+            <ul class="dropdown-list">
+                {% for i in range(categories | length ) %}
+                <li><p class="category-class">{{categories[i].name}}<p></li>
+                    {% for subcategory in categories[i].subcategories %}
+                        <li class="subcategory">
+                            <input class="check-box" type="checkbox" name="categories[]" value={{subcategory}}>{{subcategory}}
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <ul id="selected_categories_list">
+            </ul>
         </div>
+
+
         <div class="selling-form-items">
-            <textarea class="selling-form-inputs description" name='description' placeholder="Write a description" maxlength="1000" required></textarea>
+            <h3>Write a description</h3>
+            <textarea class="selling-form-inputs description" name='description' placeholder="Write a description" maxlength="1000" minlength="5" required></textarea>
             <p class="char-count">0/1000</p>
         </div>
         <div class="selling-form-items">
@@ -36,6 +54,7 @@
     </div>
 </form>
 {% block scripts%}
+    {{ super() }}
     <script src="./static/js/selling.js"></script>
 {% endblock %}
 {% endblock content %}
