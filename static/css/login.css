@@ -104,9 +104,16 @@ body{
     text-decoration: underline;
 }
 
-li{
+li.invalid {
     margin-top: 20px;
-    color: rgb(126, 255, 66);
+    color: rgb(226, 43, 43);
+    text-align: center;
+    list-style: none;
+}
+
+li.correct {
+    margin-top: 20px;
+    color: rgb(126, 245, 48);
     text-align: center;
     list-style: none;
 }

@@ -16,7 +16,11 @@
             {% if messages %}
                 <ul class=flashes>
                 {% for message in messages %}
-                <li>{{ message }}</li>
+                    {% if "Invalid" in message %}
+                        <li class="invalid">{{ message }}</li>
+                    {% else %}
+                    <li class="correct">{{ message }}</li>
+                    {% endif %}
                 {% endfor %}
                 </ul>
             {% endif %}
