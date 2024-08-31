@@ -1,59 +1,50 @@
 body{
-    min-height: 150vh;
-    max-width: 100vw;
-}
-
-
-#main-div{
-    height: 150vh;
-    width: 100vw;
+    min-height: 100vh;
+    background: url("../uploads/acc.jpg");
     display: flex;
-    flex-direction:column ;
-    justify-content: center;
-    align-items: center;
-    background: url("../uploads/white-back.jpg");
-    /*background-size: cover;
-    background-position: center; */
+    flex-direction: column;
 }
 
 #account-div{
-    height: 95%;
-    width: 95%;
-    background-color: rgb(193, 138, 244);
+    align-self: center;
+    min-height: 1000px;
+    width: 90%;
     border-radius: 40px;
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
     background: transparent;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px); 
     border: 2px solid white;
-    /*justify-content: space-around;  */
     position: relative;
-    /*align-items: center;  */
+    margin: 50px 0 100px;
+    padding: 50px;
+    align-items: flex-start;
 }
 
 .account-navs{
     border-radius: 20px;
-    margin-top: 70px;
     background-color: white;
 }
 
 #sidebar{
-    position: absolute;
-    left: 40px;
     width: 20%;
+    padding: 25px;
 }
 
 #main-content{
-    position: absolute;
-    right:30px;
-    width: 60%;
-    background: transparent;
-   backdrop-filter: 40px;
+    width: auto;
+    margin-left: 400px;
+    padding: 50px;
+    max-width: 780px;
 }
 
 #sidebar-list{
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #sidebar-list .sidebar-element{
@@ -61,7 +52,8 @@ body{
    display: flex;
    flex-direction: column;
    justify-content: center;
-
+   align-items: center;
+   width: 100%;
 }
 
 .sidebar-element-button{
@@ -70,41 +62,42 @@ body{
     background-color: white;
     font-size: 20px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    margin:0 30px;
 }
 
 .sidebar-element-button:hover{
     background-color: rgb(228, 228, 228);
     border-radius: 40px;
+    width: 60%;
+    cursor: pointer;
 }
 
 
 
-#main-content .liked-products-list{
+#main-content .products-list{
     list-style: none;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
+    padding: 0;
+    margin: 0;
 }
 
-.liked-product-image{
-    /*max-width: 260px;
-    max-height: 260px; */
+.product-image{
     height: 200px;
     width: 200px;
-    /*width: auto;
-    height: auto; */
-    /*object-fit: cover;
-    background-position: center; */
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
-.liked-products-list li{
+.products-list li{
+    margin: 30px;
     padding: 0;
-    margin-left:30px;
     display: flex;
     flex-direction: column;
     position: relative;
+    text-align: center;
+    border-bottom: 1px solid grey;
 }
 
 li a{
@@ -114,7 +107,7 @@ li a{
 
 
 
-.liked-products-list li a:hover{
+.products-list li a:hover{
     text-decoration: underline;
 }
 
@@ -123,19 +116,36 @@ li a{
 }
 
 .like-button{
-    position: absolute; /* Absolute positioning for the button */
-    top: 10px; /* Position the button 10px from the top */
-    right: 10px; /* Position the button 10px from the right */
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
 }
 
 
-.liked-product-item{
+.product-item{
     max-width: 200px;
 }
 
-.liked-product-title{
+.product-title{
     width: 100%;
     word-wrap: break-word;
     /* overflow-wrap: break-word;  */
     white-space: normal;
+}
+
+#logout-btn{
+    color: red;
+}
+
+#logout-btn:hover{
+    color: white;
+    background-color: rgb(255, 87, 87);
+    width: 80%;
+    cursor: pointer;
+}
+
+.product-price{
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: rgb(0, 186, 170);
 }
