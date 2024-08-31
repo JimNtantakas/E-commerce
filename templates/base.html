@@ -21,18 +21,20 @@
             </div>
             <ul class="navbar-menu">
                 <li><a href="{{ url_for(page) }}">{{x}}</a></li>
-                <li><a href="Categories.html">Categories</a></li>
-                <li><a href="#"><i class='bx bx-cart cart'></i></a></li>
+                <li><a href="{{ url_for("categories") }}">Categories</a></li>
+                <li><a id="cart" href="/account?section=cart"><i class='bx bx-cart cart'></i><div id="cart-length">{{products_in_cart}}</div></a></li>
                 <li><button id="sell-button">Sell your product!</button></li>
             </ul>
         </div>
     </nav>
     
     {%block content%}
-    {%endblock%}
     
+    {% block scripts %}
+        <script src="{{url_for('static',filename='js/base.js')}}"></script>
+    {% endblock %}
 
-    <script src="{{url_for('static',filename='js/sell-button.js')}}"></script>
+    {%endblock%}
 
 </body>
 </html>

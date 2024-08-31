@@ -2,12 +2,12 @@
     margin: 30px 20px;
     height: 40vh;
     box-sizing: border-box;
-   
 }
 
 body{
     min-height: 200vh;
     box-sizing: border-box;
+    background-color: #e2e9f1;
 }
 
 .product-list{
@@ -25,7 +25,8 @@ body{
 
 .product{
     margin-right: 40px;
-    background-color: rgb(248, 246, 241);
+    background-color: white;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -87,4 +88,8 @@ body{
     padding: 5px; 
     white-space: normal;
     padding: 0 10px;
+}
+
+h2{
+    font-size: 20px;
 }
