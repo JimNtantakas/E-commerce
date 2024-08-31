@@ -7,28 +7,29 @@
 
 {% block content%}
 
-<div id="main-div">
-    <div id="account-div">
-        <nav id="sidebar" class="account-navs">
-            <ul id="sidebar-list">
-                <li class="sidebar-element"><button class="sidebar-element-button" id="orders-btn" type="submit">Orders</button></li>
-                <li class="sidebar-element"><button class="sidebar-element-button" id="wishlist-btn" type="submit">Wishlist</button></li>
-                <li class="sidebar-element"><button class="sidebar-element-button" id="ratings-btn" type="submit">Ratings</button></li>
-                <li class="sidebar-element"><button class="sidebar-element-button" id="tbd1-btn" type="submit">TBD</button></li>
-                <li class="sidebar-element"><button class="sidebar-element-button" id="tbd2-btn" type="submit">TBD</button></li>
-            </ul>
-        </nav>
-        <nav id="main-content" class="account-navs">
-            {% for product in liked_products %}
-                <div>{{product.title}}<div>
-            {% endfor %}
-        </nav>
-    </div>
+<div id="account-div">
+    <nav id="sidebar" class="account-navs">
+        <ul id="sidebar-list">
+            <li class="sidebar-element"><button class="sidebar-element-button" id="orders-btn" type="submit">Orders</button></li>
+            <li class="sidebar-element"><button class="sidebar-element-button" id="wishlist-btn" type="submit">Wishlist</button></li>
+            <li class="sidebar-element"><button class="sidebar-element-button" id="cart-btn" type="submit">Cart</button></li>
+            <li class="sidebar-element"><button class="sidebar-element-button" id="ratings-btn" type="submit">Ratings</button></li>
+            <li class="sidebar-element"><button class="sidebar-element-button" id="published-products-btn" type="submit">My products</button></li>
+            <li class="sidebar-element"><button class="sidebar-element-button" id="logout-btn" type="submit">Logout</button></li>
+        </ul>
+    </nav>
+    <nav id="main-content" class="account-navs">
+        {% for product in liked_products %}
+            <div>{{product.title}}<div>
+        {% endfor %}
+    </nav>
 </div>
 
+
 {% block scripts %} 
-<script src="./static/js/account.js"></script>
-<script src="./static/js/account-like-button.js"></script>
+{{ super() }}
+<script src="./static/js/account.js "></script>
+<script src="./static/js/account-like-button.js "></script>
 {% endblock %}
 
 {% endblock %}
