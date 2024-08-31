@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block css%}
+<link rel="stylesheet" href="./static/css/categories.css">
+{%endblock%}
+
+{% block content %}
+
+<form id="categories-form" method="POST" action="/filter">
+    <div id="categories-div">
+        <h1 class="category-title">FASHION</h1>
+        <ul class="fashion-list list">
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Shoes">
+                    <button type="submit" class="category-link">Shoes</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Clothes">
+                    <button type="submit" class="category-link">Clothes</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Jewellery">
+                    <button type="submit" class="category-link">Jewellery</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Bags">
+                    <button type="submit" class="category-link">Bags</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Kids">
+                    <button type="submit" class="category-link">Kids</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Accessories">
+                    <button type="submit" class="category-link">Accessories</button>
+                </form>
+            </li>
+        </ul>
+
+        <h1 class="category-title">Tech</h1>
+        <ul class="electronics-list list">
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Phones">
+                    <button type="submit" class="category-link">Phones</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Tablets">
+                    <button type="submit" class="category-link">Tablets</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Computers">
+                    <button type="submit" class="category-link">Computers</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Gaming">
+                    <button type="submit" class="category-link">Gaming</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Electronics">
+                    <button type="submit" class="category-link">Electronics</button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" action="/filter" class="category-form">
+                    <input type="hidden" name="query" value="Accessories">
+                    <button type="submit" class="category-link">Accessories</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</form>
+
+
+
+
+{% block scripts %} 
+    {{ super() }}
+{% endblock %}
+
+{% endblock %}
