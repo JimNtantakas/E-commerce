@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/selling.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<form id="product-form" method="POST" action="/submit-changes" enctype="multipart/form-data">
+    <input type="hidden" name="product_id" value={{product._id}}>
+    <h1>Sell your product here</h1>
+    <div id="main-div">
+        <div class="form-items">
+            <h3>Title</h3>
+            <input type="text" class="form-inputs" name="title" placeholder="Title" maxlength="30" value={{product.title}} minlength="3" required>   
+        </div>
+        <div class="form-items">
+            <h3>Add your photos here</h3>
+            <input type="file" id="images" class="form-inputs" name="photos" accept="image/*" multiple>
+            <div class="images-input">
+                <label for="images" id="upload-images"><i class='bx bx-upload'></i>Upload images</label>
+                <div id="file-list"></div>
+            </div>    
+        </div>
+
+        <div class="dropdown-container form-items">
+            <h3>Select Categories and tags</h3>
+            <button type="button" class="categories_btn closed"> Categories <i class='bx bx-chevron-up'></i></button>
+            <ul class="dropdown-list">
+                {% for i in range(categories | length ) %}
+                <li><p class="category-class">{{categories[i].name}}<p></li>
+                    {% for subcategory in categories[i].subcategories %}
+                        <li class="subcategory">
+                            <input class="check-box" type="checkbox" name="categories[]" value={{subcategory}}  {% if subcategory in product_categories %} checked {% endif %} >{{subcategory}}
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <ul id="selected_categories_list">
+            </ul>
+        </div>
+
+        <div class="form-items">
+            <h3>Write a description</h3>
+            <textarea class="form-inputs description" name='description' placeholder="Write a description" maxlength="1000" minlength="5" required>{{ product.description }}</textarea>
+            <p class="char-count">0/1000</p>
+        </div>
+        <div class="form-items">
+            <h3>Quantity of the product</h3>
+            <input type="number" class="form-inputs" placeholder="Quantity" name="quantity" value={{product.quantity}}>
+        </div>
+        <div class="form-items">
+            <h3>Price of the product</h3>
+            <input type="number" class="form-inputs" placeholder="Price" name="price" value={{product.price}}>
+        </div>
+        <button type="submit" class="submit-button">Submit changes</button>
+        
+    </div>
+</form>
+
+{% block scripts%}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/edit-product.js') }}"></script>
+{% endblock %}
+
+{% endblock content %}
