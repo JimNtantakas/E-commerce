@@ -1,3 +1,7 @@
+body{
+    background-color: #e9eef4;
+}
+
 #categories-div{
     display: flex;
     flex-direction: column;
@@ -11,6 +15,11 @@
     list-style: none;
     flex-wrap: wrap;
 }
+
+.list.pets-list{
+    margin-bottom: 100px;
+}
+
 
 .list li{ 
     border-radius: 10px;
@@ -27,6 +36,17 @@
     justify-content: center;
     text-align: center;
     text-decoration: none;
+    font-size: 24px;
+    border: none;
+    border-radius: 20px;
+    background-color: rgb(214, 214, 214);
+    font-family: "League Spartan", sans-serif;
+}
+
+.category-link:hover{
+    background-color: rgb(164, 164, 164);
+    color: white;
+    transition: 0.2s;
 }
 
 .category-link:hover{
@@ -35,7 +55,7 @@
 
 
 .category-title{
-    margin-top: 60px;
+    margin-top: 100px;
 }
 
 .category-form{
