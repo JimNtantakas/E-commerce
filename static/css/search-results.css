@@ -261,3 +261,8 @@ a:hover{
     border: none;
     cursor: pointer;
 }
+
+.results-not-found{
+    color: red;
+    font-size: 30px;
+}

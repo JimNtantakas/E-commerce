@@ -5,9 +5,6 @@
 {% endblock %}
 {% block content %}
 
-{% if not results%}
-    Results not found
-{% endif %}
 
 <div id="search-body">
     <div class="search-body">
@@ -20,7 +17,7 @@
                     <button class="price-filter-submit-button" type="submit">></button>
                 </div>
                 <input name="query" type="hidden" value={{query}}>
-                <input name="sort_by" type="hidden" id="sort_by" value="{{sort_by}}">  <!-- check this value={{sort_by}} -->
+                <input name="sort_by" type="hidden" id="sort_by" value={{sort_by}}>  <!-- check this value={{sort_by}} -->
                 <h3 class="filter-title">Short by</h3>
                 <div class="dropdown-container">
                     <button type="button" class="sort-button closed">{{sort_by}} <i class='bx bx-chevron-up'></i></button>
@@ -37,6 +34,9 @@
 
         <div class="search-results">
             <ul class="results-list">
+            {% if not results%}
+                <p class="results-not-found">Results not found!<p>
+            {% endif %}
             {% for product in results%}
                 <li class="product">
                     <a href="/products/{{product._id}}" id="product-image">
