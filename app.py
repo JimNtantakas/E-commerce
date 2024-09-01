@@ -99,8 +99,12 @@ def get_user_liked_products():
 
 def get_categories():
     categories = [
-        {"name": "FASHION", "subcategories": ["Shoes", "Clothes", "Jewellery", "Bags", "Kids", "Accessories"]},
-        {"name": "TECH", "subcategories": ["Phones", "Tablets", "Computers", "Gaming", "Electronics", "Accessories"]}
+        {"name": "Fashion", "subcategories": ["Shoes", "Clothes", "Jewellery", "Bags", "Kids", "Accessories"]},
+        {"name": "Tech", "subcategories": ["Phones", "Tablets", "Computers", "Gaming", "Electronics", "Accessories"]},
+        {"name": "Home - Garden", "subcategories": ["Household Appliances", "Tools", "Furniture", "Lighting", "Cleaning Supplies", "Garden"]},
+        {"name": "Books", "subcategories": ["Literature", "Fiction", "Science", "School", "Fairy Tales", "Comics"]},
+        {"name": "Hobby - Sports", "subcategories": ["Sports", "Camping", "Gym Equipment"]},
+        {"name": "Pets", "subcategories": ["Dogs", "Cats", "Fish", "Birds", "Rodents", "Reptiles"]},
     ]
     return categories
 
@@ -138,7 +142,13 @@ def home():
 def selling():
     if not session.get("username"):
         return redirect(url_for('login'))
-    return render_template("selling.html", x="Account", page="account", products_in_cart = get_cart_products_number(), categories= get_categories())
+    return render_template(
+        "selling.html",
+        x="Account",
+        page="account",
+        products_in_cart=get_cart_products_number(),
+        categories= get_categories()
+        )
  
 
 
@@ -152,6 +162,7 @@ def submit():
     description = request.form.get("description")
     photo_ids = []
     files = request.files.getlist('photos')
+    quantity = request.form.get('quantity')
     price = request.form.get('price')
     for file in files:
         if file:
@@ -163,6 +174,7 @@ def submit():
                "photos": photo_ids,
                "likes": 0,
                "seller_id": seller_id,
+               "quantity": quantity,
                "price": str(price),
                "views": 0
                }
@@ -176,12 +188,54 @@ def submit():
     return redirect(url_for("submit_informations", product_id=str(product_id)))
 
 
+@app.route("/submit-changes", methods=['POST'])
+def submit_changes():
+    product_id = request.form.get('product_id')
+    product = products.find_one({"_id": ObjectId(product_id)})
+    title = request.form.get("title")
+    categories = request.form.getlist("categories[]")
+    description = request.form.get("description")
+    photo_ids = []
+    files = request.files.getlist('photos')
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
+    
+    for photo_id in product['photos']:
+        fs.delete(ObjectId(photo_id))
+    
+    for file in files:
+        if file:
+            photo_id = fs.put(file, filename=file.filename)
+            photo_ids.append(photo_id)
+    
+    updated_product = {
+        "title": title,
+        "categories": categories,
+        "description": description,
+        "photos": photo_ids,
+        "likes": product['likes'],
+        "seller_id": product['seller_id'],
+        "quantity": quantity,
+        "price": str(price),
+        "views": product['views']
+    } 
+    products.update_one(
+        {"_id": product['_id']},
+        {"$set": updated_product}
+    )
+    return redirect(url_for("product_details",product_id=product_id))
+    
     
 @app.route("/submit-informations/<product_id>")
 def submit_informations(product_id):
     product = products.find_one({"_id": ObjectId(product_id)})
-    return render_template("submit-informations.html", x="Account" ,page="account", product=product, products_in_cart = get_cart_products_number())
-
+    if session.get("username"):
+        user = users.find_one({"username": session["username"]})
+        if ObjectId(product['_id']) in user['published_products']:
+            return render_template("submit-informations.html", x="Account" ,page="account", product=product, products_in_cart = get_cart_products_number())
+        else:
+            return "Product not found, 404", 404 
+    return redirect(url_for('home'))
 
 
 @app.route("/account")
@@ -279,29 +333,36 @@ def logout():
 
 @app.route("/products/<product_id>")
 def product_details(product_id):
-    product = products.find_one({"_id": ObjectId(product_id)})
-    user_liked_products = get_user_liked_products()
-    liked = False
-    
-    products.find_one_and_update(
-        {"_id":ObjectId(product_id)},
-        {"$inc": {"views": 1}}                   
-    )
-    if user_liked_products:
-        if product['_id'] in user_liked_products:
-            liked = True
-    
-    logged = False
-    added_in_cart= False
-    if session.get("username"):
-        user = users.find_one({"username": session["username"]})  
-        logged = True
-        if ObjectId(product_id) in user["cart_products"]:
-            added_in_cart = True
-    
-    if product:
+    if products.find_one({"_id": ObjectId(product_id)}):
+        user = None
+        owned = False
+        product = products.find_one({"_id": ObjectId(product_id)})
+        user_liked_products = get_user_liked_products()
+        liked = False
+        if session.get("username"):
+            user = users.find_one({"username": session["username"]}) 
+            if product["_id"] in user['published_products']:
+                owned = True 
+                
+        products.find_one_and_update(
+            {"_id":ObjectId(product_id)},
+            {"$inc": {"views": 1}}                   
+        )
+        if user_liked_products:
+            if product['_id'] in user_liked_products:
+                liked = True
+ 
+        logged = False
+        added_in_cart= False
+        if session.get("username"):
+            user = users.find_one({"username": session["username"]})  
+            logged = True
+            if ObjectId(product_id) in user["cart_products"]:
+                added_in_cart = True
+                
         return render_template(
             "products.html",
+            owned = owned,
             product=product,
             x="Account" if session.get("username") else "Login",
             page="account" if session.get("username") else "login",
@@ -311,7 +372,7 @@ def product_details(product_id):
             logged = logged
         )
     else:
-        return "Product not found", 404
+        return "Product not found, 404", 404
     
     
 @app.route("/add-to-cart", methods=['POST'])
@@ -353,15 +414,13 @@ def search():
         sort_by = "Recent"  #default way of sorting products in search page
 
     if len(query) < 3:
-        #flash('Search query must be at least 3 characters long!', 'danger')
         return redirect(url_for('home'))  
     
     words = query.split()
     keyword_to_category = {
         "phone": "Phones",
         "tablet": "Tablets",
-        "laptop": "Laptops",
-        "headphone": "Headphones",
+        "laptop": "Computers",
         # Add more keyword-to-category mappings as needed
     }
     
@@ -428,10 +487,53 @@ def categories():
         "categories.html",
         x="Account" if session.get("username") else "Login",
         page="account" if session.get("username") else "login",
-        products_in_cart = get_cart_products_number()
+        products_in_cart = get_cart_products_number(),
+        categories = get_categories()
     )
 
+
+@app.route("/products/edit/<product_id>", methods=['GET'])
+def edit(product_id):
+    product = products.find_one({"_id": ObjectId(product_id)})
+    return render_template(
+        "edit-product.html",
+        x="Account" if session.get("username") else "Login",
+        page="account" if session.get("username") else "login",
+        categories= list(get_categories()),
+        product_categories = product['categories'],
+        product = product,
+        products_in_cart=get_cart_products_number()
+    )
+
+
+@app.route("/products/delete/<product_id>", methods=['POST'])
+def delete(product_id): 
+    product = products.find_one({"_id": ObjectId(product_id)})
+    print(product)
+    for photo_id in product['photos']:
+        fs.delete(ObjectId(photo_id))
+        
+    users.update_many(
+        {"liked_products": ObjectId(product_id)},
+        {"$pull": {"liked_products": ObjectId(product_id)}}
+    )
+    users.update_many(
+        {"cart_products": ObjectId(product_id)},
+        {"$pull": {"cart_products": ObjectId(product_id)}}
+    )
+    users.update_many(
+        {"orders": ObjectId(product_id)},
+        {"$pull": {"orders": ObjectId(product_id)}}
+    )
+    users.update_many(
+        {"published_products": ObjectId(product_id)},
+        {"$pull": {"published_products": ObjectId(product_id)}}
+    )
     
+    products.delete_one({"_id": ObjectId(product_id)})
+    return redirect(url_for('home'))
+    #remove everithing of this product in db
+
 
 if __name__ == "__main__":
     app.run(debug=True)
