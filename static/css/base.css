@@ -2,10 +2,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    /*background: url("./uploads/black-sand.jpg"); */
-    background-size: cover;
-    background-position: center;
+    font-family: "League Spartan", sans-serif;
 }
 
 #main-navbar {
@@ -47,6 +44,13 @@ body {
 }
 
 .navbar-menu a:hover {
+    background-color: #575757;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.brand:hover{
+    text-decoration: none;
     background-color: #575757;
     border-radius: 6px;
 }
@@ -115,3 +119,4 @@ body {
     bottom: 20px;
     color: gold;
 }
+
