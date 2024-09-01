@@ -61,10 +61,19 @@ const container = document.querySelector('.dropdown-container');
 
 all_checkboxes.forEach(checkbox =>{
     li_item = checkbox.closest('li');
-    li_item.addEventListener("click", ()=>{
-        checkbox.checked = !checkbox.checked;
-        const changeEvent = new Event('change', { bubbles: true });
-        checkbox.dispatchEvent(changeEvent);
+    li_item.addEventListener("click", (event)=>{
+        if (event.target !== checkbox ){
+
+            if (document.querySelectorAll('input[name="categories[]"]:checked').length > 3){
+                checkbox.checked = false
+                alert('You can select a maximum of 3 categories.');
+                return;
+            }
+
+            checkbox.checked = !checkbox.checked;
+            const changeEvent = new Event('change', { bubbles: true });
+            checkbox.dispatchEvent(changeEvent);
+        }
     });
 });
 
@@ -72,6 +81,13 @@ container.addEventListener("change", function(event){
     if (event.target.type === "checkbox"){
         const checkbox = event.target;
         const selected_categories_list = document.getElementById('selected_categories_list');
+
+        if (document.querySelectorAll('input[name="categories[]"]:checked').length > 3){
+            checkbox.checked = false
+            alert('You can select a maximum of 3 categories.');
+            return;
+        }
+
         if (event.target.checked){
             const selected_category = document.createElement('li');
             selected_category.id = checkbox.value;
@@ -86,7 +102,7 @@ container.addEventListener("change", function(event){
     }
 });
 
-document.getElementById('selling-form').addEventListener('submit', function(event) {
+document.getElementById('product-form').addEventListener('submit', function(event) {
     const images = document.getElementById('images');
     if (images.files.length === 0) {
         event.preventDefault(); 
