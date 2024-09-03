@@ -559,7 +559,6 @@ def edit(product_id):
 @app.route("/products/delete/<product_id>", methods=['POST'])
 def delete(product_id): 
     product = products.find_one({"_id": ObjectId(product_id)})
-    print(product)
     for photo_id in product['photos']:
         fs.delete(ObjectId(photo_id))
         
