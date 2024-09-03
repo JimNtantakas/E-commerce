@@ -41,7 +41,7 @@
 
 
 
-.product-delails-link{
+.product-details-link{
     display: block; 
     word-wrap: break-word; 
     overflow-wrap: break-word; 
@@ -50,9 +50,10 @@
     padding: 0 10px;
     text-decoration: none;
     color: black;
+    text-align: center;
 }
 
-.product-delails-link:hover{
+.product-details-link:hover{
     text-decoration: underline;
 }
 
@@ -103,4 +104,9 @@
 .back-to-home:hover{
     background-color: rgb(0, 228, 0);
     transition: 0.4s;
+}
+
+.title-container{
+    width: 100%;
+    word-wrap: break-word;
 }
