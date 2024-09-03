@@ -32,22 +32,43 @@
                 {% endfor %}
             <ul>
         </div>
-        <div class="segmend">
-            <h1>Ratings</h1>
-            <div class="ratings">
-                <div class="rating-box">
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
+        {% if not owned %}
+            {% if not already_rated %}
+                <div class="segmend">
+                    <h1>Ratings</h1>
+                    <div class="ratings">
+                        <div class="rating-box">
+                            <a class="stars-link" href="/review/{{product._id}}">
+                            {% for i in range(5) %}
+                                <i class='bx bxs-star'></i>
+                            {% endfor %}
+                            </a>
+                        </div>
+                        <div class="rate-this-product">
+                            <i class='bx bxs-pencil'></i>
+                            <a href="/review/{{product._id}}">Rate this product</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="rate-this-product">
-                    <i class='bx bxs-pencil'></i>
-                    <a>Rate this product</a>
+            {% else %}
+                <div class="segmend">
+                    <h1>Ratings</h1>
+                    <div class="ratings">
+                        <div class="rating-box">
+                            <a class="stars-link" href="/review/{{product._id}}">
+                            {% for i in range(5) %}
+                                <i class='bx bxs-star'></i>
+                            {% endfor %}
+                            </a>
+                        </div>
+                        <div class="rate-this-product">
+                            <i class='bx bxs-pencil'></i>
+                            <a href="/review/{{product._id}}">Edit your review on this product</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            {% endif %}
+        {% endif %}
         <div class="segmend description">
             <h1>Product Description</h1>
             <p>{{product.description}}</p>
@@ -57,28 +78,34 @@
             <h1 class="price">{{product.price}}€</h1>
         </div>
         {% if not owned %}
-            {% if logged %}
-                <form id="add-to-cart-form" method="POST" action="/add-to-cart">
+            {% if product.quantity>0 %}
+                {% if logged %}
+                    <form id="add-to-cart-form" method="POST" action="/add-to-cart">
+                        <div class="segmend">      
+                            <input type="hidden" name="product_id" value="{{product._id}}"> 
+                            <button type="submit" data-product-id="{{product._id}}" class="add-to-cart-btn">
+                                {% if in_cart %}
+                                    <i class='bx bx-message-square-minus'></i> Remove from Cart
+                                {% else %}
+                                    <i class='bx bx-cart-add' ></i> Add to Cart
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                {% else %}
                     <div class="segmend">      
-                        <input type="hidden" name="product_id" value="{{product._id}}"> 
-                        <button type="submit" data-product-id="{{product._id}}" class="add-to-cart-btn">
+                        <button data-product-id="{{product._id}}" class="add-to-cart-btn" id="unlogged">
                             {% if in_cart %}
-                                <i class='bx bx-message-square-minus'></i> Remove from Cart
+                                Remove from Cart
                             {% else %}
-                                <i class='bx bx-cart-add' ></i> Add to Cart
+                                Add to Cart
                             {% endif %}
                         </button>
                     </div>
-                </form>
+                {% endif %}
             {% else %}
                 <div class="segmend">      
-                    <button data-product-id="{{product._id}}" class="add-to-cart-btn" id="unlogged">
-                        {% if in_cart %}
-                            Remove from Cart
-                        {% else %}
-                            Add to Cart
-                        {% endif %}
-                    </button>
+                    <div class="out-of-stock">Out of stock</div>
                 </div>
             {% endif %}
         {% else %}
