@@ -99,8 +99,8 @@ def get_user_liked_products():
 
 def get_categories():
     categories = [
-        {"name": "Fashion", "subcategories": ["Shoes", "Clothes", "Jewellery", "Bags", "Kids", "Accessories"]},
-        {"name": "Tech", "subcategories": ["Phones", "Tablets", "Computers", "Gaming", "Electronics", "Accessories"]},
+        {"name": "Fashion", "subcategories": ["Men", "Women", "Kids", "Shoes", "Clothes", "Jewellery", "Fashion Accessories"]},
+        {"name": "Tech", "subcategories": ["Phones", "Tablets", "Computers", "Gaming", "Electronics", "Tech Accessories"]},
         {"name": "Home - Garden", "subcategories": ["Household Appliances", "Tools", "Furniture", "Lighting", "Cleaning Supplies", "Garden"]},
         {"name": "Books", "subcategories": ["Literature", "Fiction", "Science", "School", "Fairy Tales", "Comics"]},
         {"name": "Hobby - Sports", "subcategories": ["Sports", "Camping", "Gym Equipment"]},
@@ -149,8 +149,42 @@ def selling():
         products_in_cart=get_cart_products_number(),
         categories= get_categories()
         )
- 
 
+
+@app.route("/submit-review", methods=['POST'])
+def submit_review():
+    user = users.find_one({'username': session.get("username")})
+    product_id = request.form.get('product_id')
+    rating = request.form.get('review-rating')
+    text = request.form.get('review-text')
+    new_rating = {
+        "user_id": user['_id'], 
+        "rating": rating,
+        "comment": text
+    }
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$push": {"ratings": new_rating}}
+    )
+    return redirect(url_for("product_details",product_id=product_id))
+
+
+@app.route("/edit-review", methods=['POST'])
+def edit_review():
+    user = users.find_one({'username': session.get("username")})
+    product_id = request.form.get('product_id')
+    rating = request.form.get('review-rating')
+    text = request.form.get('review-text')
+    edited_rating = {
+            "user_id": user['_id'], 
+            "rating": rating,
+            "comment": text
+        }
+    products.update_one(
+        {"_id": ObjectId(product_id), "ratings.user_id": user['_id']},
+        {"$set": {"ratings.$.rating": rating, "ratings.$.comment": text}}
+    )
+    return redirect(url_for("product_details",product_id=product_id))
 
 @app.route("/submit", methods=['POST'])
 def submit():
@@ -160,7 +194,13 @@ def submit():
     title = request.form.get("title")
     categories = request.form.getlist("categories[]")
     description = request.form.get("description")
+    
     photo_ids = []
+    main_image = request.files.get('main-image')
+    if main_image:
+        photo_id = fs.put(main_image, filename=main_image.filename)
+        photo_ids.append(photo_id)
+    
     files = request.files.getlist('photos')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
@@ -174,7 +214,7 @@ def submit():
                "photos": photo_ids,
                "likes": 0,
                "seller_id": seller_id,
-               "quantity": quantity,
+               "quantity": int(quantity),
                "price": str(price),
                "views": 0
                }
@@ -196,6 +236,10 @@ def submit_changes():
     categories = request.form.getlist("categories[]")
     description = request.form.get("description")
     photo_ids = []
+    main_image = request.files.get('main-image')
+    if main_image:
+        photo_id = fs.put(main_image, filename=main_image.filename)
+        photo_ids.append(photo_id)
     files = request.files.getlist('photos')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
@@ -215,7 +259,7 @@ def submit_changes():
         "photos": photo_ids,
         "likes": product['likes'],
         "seller_id": product['seller_id'],
-        "quantity": quantity,
+        "quantity": int(quantity),
         "price": str(price),
         "views": product['views']
     } 
@@ -339,10 +383,15 @@ def product_details(product_id):
         product = products.find_one({"_id": ObjectId(product_id)})
         user_liked_products = get_user_liked_products()
         liked = False
+        already_rated = False
         if session.get("username"):
             user = users.find_one({"username": session["username"]}) 
             if product["_id"] in user['published_products']:
                 owned = True 
+            for rating in product['ratings']:
+                user_id = rating['user_id']
+                if user['_id'] == ObjectId(user_id):
+                    already_rated = True
                 
         products.find_one_and_update(
             {"_id":ObjectId(product_id)},
@@ -359,10 +408,11 @@ def product_details(product_id):
             logged = True
             if ObjectId(product_id) in user["cart_products"]:
                 added_in_cart = True
-                
+        
         return render_template(
             "products.html",
             owned = owned,
+            already_rated = already_rated,
             product=product,
             x="Account" if session.get("username") else "Login",
             page="account" if session.get("username") else "login",
@@ -532,7 +582,37 @@ def delete(product_id):
     
     products.delete_one({"_id": ObjectId(product_id)})
     return redirect(url_for('home'))
-    #remove everithing of this product in db
+
+
+@app.route("/review/<product_id>",methods=['GET'])
+def review(product_id):
+    product = products.find_one({"_id": ObjectId(product_id)})
+    already_rated = False
+    if session.get("username"):
+        user = users.find_one({"username": session["username"]}) 
+        comment = ''
+        rating = ''
+        for rating in product['ratings']:
+                user_id = rating['user_id']
+                if user['_id'] == user_id:
+                    already_rated = True
+                    comment = rating['comment']
+                    rating = rating['rating']
+                    
+        if product:
+            return render_template(
+                "review.html",
+                x="Account" if session.get("username") else "Login",
+                already_rated = already_rated,
+                rating = rating,
+                comment = comment,
+                product = product,
+                page="account" if session.get("username") else "login",
+                products_in_cart = get_cart_products_number()
+            )
+        else:
+            return "Product not found, 404", 404 
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
