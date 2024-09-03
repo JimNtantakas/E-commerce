@@ -87,12 +87,17 @@ h3{
     width: 30px;
 }
 
-label#upload-images:hover{
+#main-image{
+    display: none;
+}
+
+label.upload-images:hover{
     cursor: pointer;
     background-color: rgb(255, 133, 52);
 }
 
-label#upload-images{
+label.upload-images{
+    display: flex;
     text-transform: uppercase;
     background-color: rgb(255, 183, 48);
     padding: 15px;
@@ -101,6 +106,12 @@ label#upload-images{
     font-size: 20px;
     border-radius: 10px;
     height: 25px;
+    flex-shrink: 0;
+}
+
+.label-text{
+    width: 100%;
+    word-wrap: break-word;
 }
 
 .images-input{
@@ -207,4 +218,30 @@ label#upload-images{
     list-style: none;
     max-width: 100%;
     flex-wrap: wrap;
+}
+
+#main-image-name{
+    margin-left: 50px;
+    width: 450px;
+    word-wrap: break-word;
+}
+
+.images-name-list{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.images-name-list li{
+    word-wrap: break-word;
+}
+
+#file-list{
+    margin-left: 50px;
+    width: 450px;
+    word-wrap: break-word;
+}
+
+.check-box:hover{
+    cursor: pointer;
 }
