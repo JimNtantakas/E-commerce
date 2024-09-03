@@ -128,9 +128,9 @@ li a{
 
 .product-title{
     width: 100%;
+    height: 50px;
     word-wrap: break-word;
-    /* overflow-wrap: break-word;  */
-    white-space: normal;
+    text-align: start;
 }
 
 #logout-btn{
@@ -148,4 +148,6 @@ li a{
     margin-top: 25px;
     margin-bottom: 10px;
     color: rgb(0, 186, 170);
+    align-self: flex-start;
 }
+
