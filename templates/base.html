@@ -23,9 +23,9 @@
                 </form>
             </div>
             <ul class="navbar-menu">
-                <li><a href="{{ url_for(page) }}">{{x}}</a></li>
-                <li><a href="{{ url_for("categories") }}">Categories</a></li>
-                <li><a id="cart" href="/account?section=cart"><i class='bx bx-cart cart'></i><div id="cart-length">{{products_in_cart}}</div></a></li>
+                <li><a class="nav-item" href="{{ url_for(page) }}">{{x}}</a></li>
+                <li><a class="nav-item" href="{{ url_for("categories") }}">Categories</a></li>
+                <li><a class="nav-item" id="cart" href="/account?section=cart"><i class='bx bx-cart cart'></i><div id="cart-length">{{products_in_cart}}</div></a></li>
                 <li><button id="sell-button">Sell your product!</button></li>
             </ul>
         </div>
