@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block css%}
+<link rel="stylesheet" href="{{url_for('static',filename='css/review.css')}}">
+{%endblock%}
+
+{% block content %}
+
+<form id="review-form" {% if not already_rated %} action="/submit-review" {% else %} action="/edit-review" {% endif %} method="POST"> 
+    <input type="hidden" name="product_id" value={{product._id}}>
+    <div id="review-body">
+        <div class="segmend first">
+            <a href="/products/{{product._id}}" class="product-details-link"><img id="product-image" src="{{url_for('photo', photo_id=product.photos[0])}}"></a>
+            <div class="title-container"><a href="/products/{{product._id}}" class="title-text product-details-link">{{product.title}} </a></div>
+        </div>
+        <div class="segmend second">
+            <h3>Rate this product out of 5</h3>
+            <input type="number" step="0.1" max="5" min="0" placeholder="0-5" class="review-number" name="review-rating" value={{rating}} >
+            <h3>Write a review</h3>
+            <textarea class="review-text" placeholder="Write a review" maxlength="1500" minlength="30" name="review-text">{{comment}}</textarea>
+            <p class="char-count">0/1500</p>
+        </div>
+        <button type="submit" class="publish-review-btn">{% if not already_rated %}Publish review{% else %}Edit review{% endif %}</button>
+    </div>
+</form>
+
+{% block scripts %} 
+    {{ super() }}
+    <script src="{{url_for('static', filename='js/review.js')}}"></script>
+{% endblock %}
+
+{% endblock %}
