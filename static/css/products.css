@@ -35,7 +35,7 @@
 #main-image{
     margin-top: 10px;
     height: auto;
-    width: 500px;
+    width: 700px;
     margin-left: 50px;
     border-radius: 10px;
     position: relative;
@@ -132,9 +132,19 @@
     font-size: 24px;
 }
 
+.stars-link{
+    display: flex;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.stars-link:hover{
+    cursor: pointer;
+}
+
+
 .rating-box:hover .bxs-star {
     color:rgb(255, 191, 0);
-    cursor: pointer;
 }
 
 .bx.bxs-pencil a{
@@ -240,4 +250,14 @@
 .likes-container{
     display: flex;
     flex-direction: row;
+}
+
+.out-of-stock{
+    width: 100%;
+    background-color: grey;
+    border-radius: 20px;
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    padding: 15px;
 }
