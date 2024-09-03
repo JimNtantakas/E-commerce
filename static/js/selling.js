@@ -8,6 +8,16 @@ description.addEventListener('input', ()=>{
 });
 
 
+document.getElementById('main-image').addEventListener("change", function(event){
+    const main_img = this.files;
+    const fileDiv = document.getElementById('main-image-name');
+    fileDiv.innerHTML = '';
+    if (main_img.length > 0){
+        fileDiv.textContent = main_img[0].name;
+    }
+
+});
+
 document.getElementById('images').addEventListener("change", function(event){
     const fileList = this.files;
     const fileListDiv = document.getElementById('file-list');
@@ -27,6 +37,7 @@ document.getElementById('images').addEventListener("change", function(event){
             li.textContent = fileList[i].name; 
             ul.appendChild(li);
         }
+        ul.classList.add('images-name-list');
         fileListDiv.appendChild(ul);
         } 
     else {
@@ -60,10 +71,9 @@ const all_checkboxes = document.querySelectorAll('input[name="categories[]"]');
 const container = document.querySelector('.dropdown-container');
 
 all_checkboxes.forEach(checkbox =>{
-    li_item = checkbox.closest('li');
+    const li_item = checkbox.closest('li');
     li_item.addEventListener("click", (event)=>{
         if (event.target !== checkbox ){
-
             if (document.querySelectorAll('input[name="categories[]"]:checked').length > 3){
                 checkbox.checked = false
                 alert('You can select a maximum of 3 categories.');
@@ -80,6 +90,15 @@ all_checkboxes.forEach(checkbox =>{
 container.addEventListener("change", function(event){
     if (event.target.type === "checkbox"){
         const checkbox = event.target;
+        const checked_checkboxes = document.querySelectorAll('input[name="categories[]"]:checked');
+        for (let i=0;i<checked_checkboxes.length-1;i++){
+            if (checked_checkboxes[i].closest('li').getAttribute('categoryClass') != checked_checkboxes[i+1].closest('li').getAttribute('categoryClass')){
+                checkbox.checked = false
+                alert("Select from the same category only");
+                return 
+            }
+        }
+
         const selected_categories_list = document.getElementById('selected_categories_list');
 
         if (document.querySelectorAll('input[name="categories[]"]:checked').length > 3){
@@ -103,10 +122,10 @@ container.addEventListener("change", function(event){
 });
 
 document.getElementById('product-form').addEventListener('submit', function(event) {
-    const images = document.getElementById('images');
-    if (images.files.length === 0) {
+    const main_image = document.getElementById('main-image');
+    if (main_image.files.length === 0) {
         event.preventDefault(); 
-        alert('Please upload at least one photo.');
+        alert('Please upload at least one main image.');
     }
     const checkboxes = document.querySelectorAll('input[name="categories[]"]:checked');
     if (checkboxes.length === 0) {
