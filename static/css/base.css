@@ -21,7 +21,7 @@ body {
 .brand {
     color: white;
     text-decoration: none;
-    font-size: 1.5em;
+    font-size: 22px;
     padding: 14px 20px;
 }
 
@@ -120,3 +120,6 @@ body {
     color: gold;
 }
 
+.nav-item{
+    font-size: 18px;
+}
