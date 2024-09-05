@@ -19,7 +19,7 @@
         <button id="like-button-{{product._id}}" class="like-button  {% if liked %}liked{% endif %}" type="submit" ><i class='bx bx-heart'></i></button>
     </div >
     <div class="product-details">
-        <div class="first-segmend segmend">
+        <div class="segmend">
             <div class="product-title"><h1>{{product.title}}</h1></div>
             <ul class="categories_list">
                 {% for category in product.categories %}
@@ -30,45 +30,31 @@
                         </form>
                     </li>
                 {% endfor %}
-            <ul>
+                </ul>
+            <div class="publisher-div">
+                By
+                <a href="/user/{{seller['_id']}}" class="user-link">
+                    <i class='bx bxs-user-circle'></i> 
+                    <span class="username">{{seller['username']}}</span>
+                </a>
+            </div>
         </div>
-        {% if not owned %}
-            {% if not already_rated %}
-                <div class="segmend">
-                    <h1>Ratings</h1>
-                    <div class="ratings">
-                        <div class="rating-box">
-                            <a class="stars-link" href="/review/{{product._id}}">
-                            {% for i in range(5) %}
-                                <i class='bx bxs-star'></i>
-                            {% endfor %}
-                            </a>
-                        </div>
-                        <div class="rate-this-product">
-                            <i class='bx bxs-pencil'></i>
-                            <a href="/review/{{product._id}}">Rate this product</a>
-                        </div>
-                    </div>
+        <div class="segmend">
+            <h1>Reviews</h1>
+            <div class="ratings">
+                <div class="rating-box">
+                    <i class='bx bxs-star'></i>
+                    <span class="ratings-count">{{total_rating}}/5</span>
+                    <a href="/reviews/{{product._id}}" class="ratings-count">({{count}} {% if count!=1 %}reviews {% else %}review{% endif %})</a>
                 </div>
-            {% else %}
-                <div class="segmend">
-                    <h1>Ratings</h1>
-                    <div class="ratings">
-                        <div class="rating-box">
-                            <a class="stars-link" href="/review/{{product._id}}">
-                            {% for i in range(5) %}
-                                <i class='bx bxs-star'></i>
-                            {% endfor %}
-                            </a>
-                        </div>
-                        <div class="rate-this-product">
-                            <i class='bx bxs-pencil'></i>
-                            <a href="/review/{{product._id}}">Edit your review on this product</a>
-                        </div>
-                    </div>
+                <div class="rate-this-product">
+                    {% if not owned %}
+                        <i class='bx bxs-pencil'></i>
+                        <a href="/review/{{product._id}}">{% if not already_rated %}Rate this product {% else %}Edit your review on this product {% endif %}</a>                   
+                    {% endif %}
                 </div>
-            {% endif %}
-        {% endif %}
+            </div>
+        </div>
         <div class="segmend description">
             <h1>Product Description</h1>
             <p>{{product.description}}</p>
@@ -106,6 +92,14 @@
             {% else %}
                 <div class="segmend">      
                     <div class="out-of-stock">Out of stock</div>
+                    {% if in_cart %}
+                        <form  id="add-to-cart-form" method="POST" action="/add-to-cart">
+                            <input type="hidden" name="product_id" value="{{product._id}}">
+                            <button type="submit" data-product-id="{{product._id}}" class="add-to-cart-btn zero-left">
+                                Remove from Cart
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
             {% endif %}
         {% else %}

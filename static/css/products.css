@@ -9,6 +9,7 @@
 .images-list{
     display: flex;
     flex-direction: column;
+    list-style: none;
 }
 
 
@@ -116,36 +117,22 @@
 }
 
 .rating-box{
-    background-color: rgb(255, 229, 201);
     margin: 20px 0;
     height: 50px;
     display: flex;
     justify-content: flex-start;
-    width: 120px;
     padding: 0 20px;
     border-radius: 5px;
+    align-items: center;
+    font-size: 25px;
 }
 
 .bx.bxs-star{
-    align-self: center;
     color: rgb(255, 172, 82);
-    font-size: 24px;
-}
-
-.stars-link{
-    display: flex;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.stars-link:hover{
-    cursor: pointer;
+    font-size: 50px;
 }
 
 
-.rating-box:hover .bxs-star {
-    color:rgb(255, 191, 0);
-}
 
 .bx.bxs-pencil a{
     text-decoration: dotted;
@@ -236,7 +223,7 @@
 
 .ratings{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .price{
@@ -260,4 +247,41 @@
     color: white;
     text-align: center;
     padding: 15px;
+}
+
+.publisher-div{
+    font-size: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-link{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: purple;
+}
+
+.user-link .username:hover {
+    text-decoration: underline;
+}
+
+
+.bxs-user-circle{
+    margin-left: 30px;
+    font-size: 40px;
+}
+
+.add-to-cart-btn.zero-left{
+    margin-top: 20px;
+    width: 106%;
+    font-size: 22px;
+    padding: 15px;
+    text-align: center;
+}
+
+
+.ratings-count{
+    margin-left: 20px;
 }
