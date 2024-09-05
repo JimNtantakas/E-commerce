@@ -1,13 +1,20 @@
-#first-frame{
-    margin: 30px 20px;
-    height: 40vh;
+#homepage-body{
+    overflow: hidden;
+    min-height: 100vh;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.frame{
+    margin: 50px 20px;
+    height: fit-content;
     box-sizing: border-box;
 }
 
-body{
-    min-height: 100vh;
-    box-sizing: border-box;
-}
+
 
 .product-list{
     list-style: none;
@@ -48,11 +55,6 @@ body{
     background: #555;
 }
 
-.latest{
-    /*background-color: #40cffb; */
-    border-radius: 10px;
-    margin-right: 7px;
-}
 
 .product-image{
     border-radius: 5px;
@@ -85,7 +87,7 @@ h2{
     width: 100%; 
     text-align: center; 
     overflow: auto;
-    height: 200px;
+    height: 120px;
 }
 
 .title-text{
@@ -103,4 +105,16 @@ h2{
 
 .product-details-link:link, .product-details-link:visited{
     color:black;
+}
+
+.bx.bx-time-five{
+    color: red;
+}
+
+.bx.bx-star{
+    color: goldenrod;
+}
+
+.list-icon-title{
+    margin-left: 30px;
 }
