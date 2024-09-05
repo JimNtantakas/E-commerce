@@ -1,11 +1,13 @@
 body{
     min-height: 100vh;
-    background: url("../uploads/acc.jpg");
     display: flex;
     flex-direction: column;
+    font-family: "League Spartan", sans-serif;
+    background-color: white;
 }
 
 #account-div{
+    background-color: #e2e9f1;
     align-self: center;
     min-height: 1000px;
     width: 90%;
@@ -13,7 +15,6 @@ body{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    background: transparent;
     backdrop-filter: blur(20px); 
     border: 2px solid white;
     position: relative;
@@ -30,9 +31,11 @@ body{
 #sidebar{
     width: 20%;
     padding: 25px;
+    position: relative;
 }
 
 #main-content{
+    background-color: white;
     width: auto;
     margin-left: 400px;
     padding: 50px;
@@ -60,8 +63,7 @@ body{
     text-align: center;
     border: none;
     background-color: white;
-    font-size: 20px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 22px;
 }
 
 .sidebar-element-button:hover{
@@ -112,7 +114,8 @@ li a{
 }
 
 .empty-message{
-    font-size: 18px;
+    font-size: 22px;
+    color: red;
 }
 
 .like-button{
@@ -128,7 +131,7 @@ li a{
 
 .product-title{
     width: 100%;
-    height: 50px;
+    height: 65px;
     word-wrap: break-word;
     text-align: start;
 }
@@ -151,3 +154,103 @@ li a{
     align-self: flex-start;
 }
 
+
+#main-content{
+    display: none;
+}
+
+
+#main-content.show{
+    display: flex;
+    border-radius: 20px;
+    background-color: white;
+}
+
+.rating-div{
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+.account-star{
+    font-size: 30px;
+}
+
+.rating-number-span{
+    margin-left: 5px;
+}
+
+.user-div.hidden {
+    display: none;
+}
+
+.user-div{
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    justify-content: start;
+    padding: 50px;
+}
+
+.user-div.show{
+    display: flex;
+}
+
+.change-info{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+}
+
+.change-info a{
+    margin-top: 30px;
+    color: rgb(30, 30, 254);
+}
+
+
+#checkout-btn{
+    background-color: rgb(0, 218, 0);
+    height: 100%;
+    width: 100%;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 22px;
+}
+
+#checkout-btn-link.hidden{
+    display: none;
+}
+
+#checkout-btn-link{
+    display: block;
+    height: 50px;
+    width: 100%;
+    top: 550px;
+    border-radius: 30px;
+    left: 0px;
+    position: absolute;
+}
+
+#checkout-btn:hover{
+    cursor: pointer;
+    background-color: rgb(0, 142, 0);
+}
+
+.change-data{
+    border-bottom: 2px solid black;
+}
+
+.change-data{
+    border-bottom: 2px solid black;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 45px;
+    text-align: center;
+}
+
+.user-info{
+    border-bottom: 3px solid black;
+}
