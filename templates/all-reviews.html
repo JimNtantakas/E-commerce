@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block css%}
+<link rel="stylesheet" href="{{url_for('static',filename='css/review.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/all-reviews.css')}}">
+{%endblock%}
+
+{% block content %}
+
+<form id="review-form" {% if not already_rated %} action="/submit-review" {% else %} action="/edit-review" {% endif %} method="POST"> 
+    <input type="hidden" name="product_id" value={{product._id}}>
+    <div id="review-body">
+        <div class="segmend first">
+            <a href="/products/{{product._id}}" class="product-details-link"><img id="product-image" src="{{url_for('photo', photo_id=product.photos[0])}}"></a>
+            <div class="title-container"><a href="/products/{{product._id}}" class="title-text product-details-link">{{product.title}} </a></div>
+        </div>
+        <div class="segmend second">
+            <ul class="all-reviews">
+                {% for rating in product.ratings %}
+                    <li>
+                        <div class="user-div-row">
+                            <i class='bx bxs-user-circle all-reviews-pfp'></i>
+                            <div class="user-div-col">
+                                <span class="rating-number">
+                                    <i class='bx bxs-star all-reviews-star'></i>
+                                    <span>{{rating.rating}}/5</span>
+                                </span>
+                                <a href="/user/{{all_users_reviewed[loop.index0]._id}}" class="user-username">{{all_users_reviewed[loop.index0].username}}</a>
+                            </div>
+                        </div>
+                        <div class="rating-comment">
+                            <span>{{rating.comment}}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div>
+    </div>
+</form>
+
+{% block scripts %} 
+    {{ super() }}
+    <script src="{{url_for('static', filename='js/review.js')}}"></script>
+{% endblock %}
+
+{% endblock %}
