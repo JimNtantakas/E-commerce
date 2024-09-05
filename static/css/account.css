@@ -239,18 +239,22 @@ li a{
     background-color: rgb(0, 142, 0);
 }
 
-.change-data{
-    border-bottom: 2px solid black;
-}
+
 
 .change-data{
     border-bottom: 2px solid black;
-    width: 100%;
+    width: 75%;
     padding: 15px;
     margin-bottom: 45px;
     text-align: center;
 }
 
 .user-info{
-    border-bottom: 3px solid black;
+    padding: 10px;
+    border: 2px solid grey;
+    border-radius: 30px;
+}
+
+.change-data.delete-acc{
+    color: red;
 }
