@@ -308,7 +308,7 @@ my_products_btn.addEventListener("click", function(){
                 const price = document.createElement('a');
                 price.text = product.price+' €';
                 price.classList.add('product-price','product-details-link');
-                price.href = `'/products/${product._id}'`;
+                price.href = `/products/${product._id}`;
             
                 if (product.photos.length > 0) {
                     const photo_id = product.photos[0];  // Assuming you only want the first photo
