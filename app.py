@@ -16,10 +16,10 @@ SECRET_KEY = os.getenv("MY_SECRET_KEY")
 MONGO_URI = os.getenv("MONGO_URI")
 
 app.config['SECRET_KEY'] = SECRET_KEY
-app.config['MONGO_URI'] = MONGO_URI
+#app.config['MONGO_URI'] = MONGO_URI
 
-#client = MongoClient('localhost', 27017)
-client = MongoClient(app.config['MONGO_URI'])
+client = MongoClient('localhost', 27017)
+#client = MongoClient(app.config['MONGO_URI'])
 db = client["flask_database"]
 products = db['products']
 users = db['users']
@@ -37,6 +37,239 @@ def photo(photo_id):
 
 
 
+@app.route("/")
+def home():
+    all_products = products.find()
+    
+    rated_products = products.find(({"total_rating": {"$ne": ""}}))
+    products_sorted_by_rating = rated_products.sort("total_rating", -1)
+    most_viewed_products = products.find().sort("views", -1)
+    
+    return render_template(
+        "homepage.html",
+        x="Account" if session.get("username") else "Login",
+        page="account" if session.get("username") else "login",
+        products=all_products,
+        products_sorted_by_rating = products_sorted_by_rating,
+        most_viewed_products = most_viewed_products,
+        user_liked_products=get_user_liked_products(),
+        products_in_cart = get_cart_products_number()
+    )
+     
+        
+@app.route("/selling")
+def selling():
+    if not session.get("username"):
+        return redirect(url_for('login'))
+    return render_template(
+        "selling.html",
+        x="Account",
+        page="account",
+        products_in_cart=get_cart_products_number(),
+        categories= get_categories()
+        )
+
+
+@app.route("/submit-review", methods=['POST'])
+def submit_review():
+    user = users.find_one({'username': session.get("username")})
+    product_id = request.form.get('product_id')
+    rating = float(request.form.get('review-rating'))
+    text = request.form.get('review-text')
+    
+    #for user
+    new_rated_product = {
+        "product_id": ObjectId(product_id), 
+        "rating": rating,
+        "comment": text
+    }
+    users.update_one(
+        {"_id": user['_id']},
+        {"$push": {"rated_products": new_rated_product}}
+    )
+    
+    #for product
+    new_rating = {
+        "user_id": user['_id'], 
+        "rating": rating,
+        "comment": text
+    }
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$push": {"ratings": new_rating}}
+    )
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$set": {"total_rating": product_total_rating(product_id) if product_total_rating(product_id)!="" else 0 }}
+    )
+    
+    return redirect(url_for("product_details",product_id=product_id))
+
+
+@app.route("/edit-review", methods=['POST'])
+def edit_review():
+    user = users.find_one({'username': session.get("username")})
+    product_id = request.form.get('product_id')
+    rating = float(request.form.get('review-rating'))
+    text = request.form.get('review-text')
+    
+    new_edited_product = {
+        "product_id": ObjectId(product_id), 
+        "rating": rating,
+        "comment": text
+    }
+    users.update_one(
+        {"_id": user['_id'], "rated_products.product_id": ObjectId(product_id)},
+        {"$set": {
+            "rated_products.$.rating": new_edited_product["rating"],
+            "rated_products.$.comment": new_edited_product["comment"]
+        }}
+    )
+    
+
+    products.update_one(
+        {"_id": ObjectId(product_id), "ratings.user_id": user['_id']},
+        {"$set": {"ratings.$.rating": rating, "ratings.$.comment": text}}
+    )
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$set": {"total_rating": product_total_rating(product_id) if product_total_rating(product_id)!="" else 0}}
+    )
+    
+    return redirect(url_for("product_details",product_id=product_id))
+
+
+@app.route("/delete-review", methods=['POST'])
+def delete_review():
+    user = users.find_one({"username": session.get("username")})
+    product_id = request.form.get('product_id')
+        
+    users.update_one(
+        {"_id": user['_id']},
+        {"$pull": {"rated_products": {"product_id": ObjectId(product_id)}}}
+    )
+    
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$pull": {"ratings": {"user_id": user['_id']}}}
+    )
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$set": {"total_rating": product_total_rating(product_id) if product_total_rating(product_id)!="" else 0}}
+    )
+    
+    return redirect(url_for("product_details",product_id=product_id))
+
+
+@app.route("/submit", methods=['POST'])
+def submit():
+    seller_username = session.get("username")
+    user = users.find_one({"username": seller_username})
+    seller_id = user['_id']
+    title = request.form.get("title")
+    categories = request.form.getlist("categories[]")
+    description = request.form.get("description")
+    ratings = []
+    
+    photo_ids = []
+    main_image = request.files.get('main-image')
+    if main_image:
+        photo_id = fs.put(main_image, filename=main_image.filename)
+        photo_ids.append(photo_id)
+    
+    files = request.files.getlist('photos')
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
+    for file in files:
+        if file:
+            photo_id = fs.put(file, filename=file.filename)
+            photo_ids.append(photo_id)
+    product = {"title": title,
+               "categories": categories,
+               "description": description,
+               "photos": photo_ids,
+               "likes": 0,
+               "seller_id": seller_id,
+               "quantity": int(quantity),
+               "price": str(price),
+               "views": 0,
+               "total_rating": 0,
+               "ratings": ratings
+               }
+    products.insert_one(product)
+    users.update_one(
+            {'_id': user['_id']},
+            {'$push': {'published_products': ObjectId(product['_id'])}}
+            )
+    
+    product_id = product["_id"]
+    return redirect(url_for("submit_informations", product_id=str(product_id)))
+
+
+@app.route("/submit-changes", methods=['POST'])
+def submit_changes():
+    product_id = request.form.get('product_id')
+    product = products.find_one({"_id": ObjectId(product_id)})
+    title = request.form.get("title")
+    categories = request.form.getlist("categories[]")
+    description = request.form.get("description")
+    
+    
+    main_image = request.files.get('main-image')
+    photo_ids = []
+    
+    delete_image_ids = request.form.getlist('delete-images')
+    if delete_image_ids:
+        #remove all the checked images
+        for image_id in delete_image_ids:
+            fs.delete(ObjectId(image_id))
+            products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$pull": {"photos": ObjectId(image_id)}}
+            )
+    product = products.find_one({"_id": ObjectId(product_id)})
+    
+    
+    if main_image:
+        # if main_image changes put it first
+        photo_id = fs.put(main_image, filename=main_image.filename)
+        photo_ids.append(photo_id)
+        for photo_id in product['photos']:
+            photo_ids.append(photo_id)
+    else:
+        for photo_id in product['photos']:
+            photo_ids.append(photo_id)
+            
+    
+
+    files = request.files.getlist('photos')
+    for file in files:
+        if file:
+            photo_id = fs.put(file, filename=file.filename)
+            photo_ids.append(photo_id)
+    
+    #for photo_id in product['photos']:
+        #fs.delete(ObjectId(photo_id))    
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
+    updated_product = {
+        "title": title,
+        "categories": categories,
+        "description": description,
+        "photos": photo_ids,
+        "likes": product['likes'],
+        "seller_id": product['seller_id'],
+        "quantity": int(quantity),
+        "price": str(price),
+        "views": product['views']
+    } 
+    products.update_one(
+        {"_id": product['_id']},
+        {"$set": updated_product}
+    )
+    return redirect(url_for("product_details",product_id=product_id))
+    
+   
 @app.route('/liked-products', methods=['GET'])
 def get_liked_products():
     if session.get('username'):
@@ -157,222 +390,6 @@ def get_cart_products_number():
         return sum
     else:
         return 0
-
-@app.route("/")
-def home():
-    all_products = products.find()
-    all_products = list(all_products)
-    for product in all_products:
-        product['photos'] = [str(photo_id) for photo_id in product['photos']]
-        product['seller_id'] = str(product['seller_id'])
-    return render_template(
-        "homepage.html",
-        x="Account" if session.get("username") else "Login",
-        page="account" if session.get("username") else "login",
-        products=all_products,
-        user_liked_products=get_user_liked_products(),
-        products_in_cart = get_cart_products_number()
-    )
-     
-        
-@app.route("/selling")
-def selling():
-    if not session.get("username"):
-        return redirect(url_for('login'))
-    return render_template(
-        "selling.html",
-        x="Account",
-        page="account",
-        products_in_cart=get_cart_products_number(),
-        categories= get_categories()
-        )
-
-
-@app.route("/submit-review", methods=['POST'])
-def submit_review():
-    user = users.find_one({'username': session.get("username")})
-    product_id = request.form.get('product_id')
-    rating = float(request.form.get('review-rating'))
-    text = request.form.get('review-text')
-    
-    new_rated_product = {
-        "product_id": ObjectId(product_id), 
-        "rating": rating,
-        "comment": text
-    }
-    users.update_one(
-        {"_id": user['_id']},
-        {"$push": {"rated_products": new_rated_product}}
-    )
-    
-    new_rating = {
-        "user_id": user['_id'], 
-        "rating": rating,
-        "comment": text
-    }
-    products.update_one(
-        {"_id": ObjectId(product_id)},
-        {"$push": {"ratings": new_rating}}
-    )
-    return redirect(url_for("product_details",product_id=product_id))
-
-
-@app.route("/edit-review", methods=['POST'])
-def edit_review():
-    user = users.find_one({'username': session.get("username")})
-    product_id = request.form.get('product_id')
-    rating = float(request.form.get('review-rating'))
-    text = request.form.get('review-text')
-    
-    new_edited_product = {
-        "product_id": ObjectId(product_id), 
-        "rating": rating,
-        "comment": text
-    }
-    users.update_one(
-        {"_id": user['_id'], "rated_products.product_id": ObjectId(product_id)},
-        {"$set": {
-            "rated_products.$.rating": new_edited_product["rating"],
-            "rated_products.$.comment": new_edited_product["comment"]
-        }}
-    )
-    
-
-    products.update_one(
-        {"_id": ObjectId(product_id), "ratings.user_id": user['_id']},
-        {"$set": {"ratings.$.rating": rating, "ratings.$.comment": text}}
-    )
-    return redirect(url_for("product_details",product_id=product_id))
-
-
-@app.route("/delete-review", methods=['POST'])
-def delete_review():
-    user = users.find_one({"username": session.get("username")})
-    product_id = request.form.get('product_id')
-        
-    users.update_one(
-        {"_id": user['_id']},
-        {"$pull": {"rated_products": {"product_id": ObjectId(product_id)}}}
-    )
-    
-    products.update_one(
-        {"_id": ObjectId(product_id)},
-        {"$pull": {"ratings": {"user_id": user['_id']}}}
-    )
-    return redirect(url_for("product_details",product_id=product_id))
-
-
-@app.route("/submit", methods=['POST'])
-def submit():
-    seller_username = session.get("username")
-    user = users.find_one({"username": seller_username})
-    seller_id = user['_id']
-    title = request.form.get("title")
-    categories = request.form.getlist("categories[]")
-    description = request.form.get("description")
-    ratings = []
-    
-    photo_ids = []
-    main_image = request.files.get('main-image')
-    if main_image:
-        photo_id = fs.put(main_image, filename=main_image.filename)
-        photo_ids.append(photo_id)
-    
-    files = request.files.getlist('photos')
-    quantity = request.form.get('quantity')
-    price = request.form.get('price')
-    for file in files:
-        if file:
-            photo_id = fs.put(file, filename=file.filename)
-            photo_ids.append(photo_id)
-    product = {"title": title,
-               "categories": categories,
-               "description": description,
-               "photos": photo_ids,
-               "likes": 0,
-               "seller_id": seller_id,
-               "quantity": int(quantity),
-               "price": str(price),
-               "views": 0,
-               "ratings": ratings
-               }
-    products.insert_one(product)
-    users.update_one(
-            {'_id': user['_id']},
-            {'$push': {'published_products': ObjectId(product['_id'])}}
-            )
-    
-    product_id = product["_id"]
-    return redirect(url_for("submit_informations", product_id=str(product_id)))
-
-
-@app.route("/submit-changes", methods=['POST'])
-def submit_changes():
-    product_id = request.form.get('product_id')
-    product = products.find_one({"_id": ObjectId(product_id)})
-    title = request.form.get("title")
-    categories = request.form.getlist("categories[]")
-    description = request.form.get("description")
-    
-    
-    main_image = request.files.get('main-image')
-    photo_ids = []
-    
-    delete_image_ids = request.form.getlist('delete-images')
-    if delete_image_ids:
-        #remove all the checked images
-        for image_id in delete_image_ids:
-            fs.delete(ObjectId(image_id))
-            products.update_one(
-                {"_id": ObjectId(product_id)},
-                {"$pull": {"photos": ObjectId(image_id)}}
-            )
-    product = products.find_one({"_id": ObjectId(product_id)})
-    
-    
-    if main_image:
-        # if main_image changes put it first
-        photo_id = fs.put(main_image, filename=main_image.filename)
-        photo_ids.append(photo_id)
-        print(photo_ids)
-        i = 0
-        for photo_id in product['photos']:
-            #if i == 0:
-            #    continue
-            photo_ids.append(photo_id)
-        print(photo_ids)
-    else:
-        for photo_id in product['photos']:
-            photo_ids.append(photo_id)
-            
-    
-
-    files = request.files.getlist('photos')
-    for file in files:
-        if file:
-            photo_id = fs.put(file, filename=file.filename)
-            photo_ids.append(photo_id)
-    
-    #for photo_id in product['photos']:
-        #fs.delete(ObjectId(photo_id))    
-    quantity = request.form.get('quantity')
-    price = request.form.get('price')
-    updated_product = {
-        "title": title,
-        "categories": categories,
-        "description": description,
-        "photos": photo_ids,
-        "likes": product['likes'],
-        "seller_id": product['seller_id'],
-        "quantity": int(quantity),
-        "price": str(price),
-        "views": product['views']
-    } 
-    products.update_one(
-        {"_id": product['_id']},
-        {"$set": updated_product}
-    )
-    return redirect(url_for("product_details",product_id=product_id))
     
     
 @app.route("/submit-informations/<product_id>")
@@ -508,7 +525,8 @@ def product_total_rating(product_id):
             sum += rating['rating']
             count += 1    
     if count > 0 :
-        total_rating = round(sum / count, 1)    
+        print(sum,count)
+        total_rating = round(sum / count, 1)  
     return total_rating
 
 @app.route("/products/<product_id>")
@@ -607,25 +625,39 @@ def search():
     if len(query) < 3:
         return redirect(url_for('home'))  
     
-    words = query.split()
-    keyword_to_category = {
-        "phone": "Phones","tablet": "Tablets","laptop": "Computers","dog": "Dogs","cat": "Cats","football": "Sports"
-        # Add more keyword-to-category mappings as needed
-    }
-    
-    for word in words:
-        if word.lower() in keyword_to_category:
-            words.append(keyword_to_category[word.lower()])
-            
-    regex_pattern = "|".join([f"\\b{word}\\b" for word in words])
-    search_results = products.find({
-        "$or": [
-            {"title": {"$regex": regex_pattern, "$options": "i"}},
-            {"categories": {"$regex": regex_pattern, "$options": "i"}},
-            {"description": {"$regex": regex_pattern, "$options": "i"}}
-        ]
-    })
-    
+    if query == "latest listings":
+        search_results = products.find()
+    elif query == "top rated":
+        search_results = products.find().sort("total_rating", -1)
+    elif query == "most viewed":
+        search_results = products.find().sort("views", -1)
+    else:
+        
+        words = query.split()
+        keyword_to_category = {
+            "phone": "Phones","smartphone": "Phones","smartphones": "Phones","tablet": "Tablets","ipad": "Tablets","ipads": "Tablets","laptop": "Computers","laptops": "Computers",
+            "dog": "Dogs","cat": "Cats","football": "Sports","soccer":"football","jewelleries":"Jewellery"
+            # Add more keyword-to-category mappings as needed
+        }
+        
+        for word in words:
+            if word.lower() in keyword_to_category:
+                words.append(keyword_to_category[word.lower()])
+                
+        regex_pattern = "|".join([f"\\b{word}\\b" for word in words])
+        search_results = products.find({    
+            "$and":[
+                {"quantity": {"$gt": 0}},
+                {
+                    "$or": [
+                        {"title": {"$regex": regex_pattern, "$options": "i"}},
+                        {"categories": {"$regex": regex_pattern, "$options": "i"}},
+                        {"description": {"$regex": regex_pattern, "$options": "i"}},
+                    ]
+                }
+            ]
+        })
+        
     
     search_results = list(search_results)
     results = list(search_results)
@@ -640,8 +672,14 @@ def search():
         search_results.sort(key=lambda x: int(x['price']))
     elif sort_by == "Descending":
         search_results.sort(key=lambda x: int(x['price']), reverse=True)    
-
-        
+    elif sort_by == "Rating":
+        search_results.sort(key=lambda x: (x['total_rating']), reverse=True)    
+    elif sort_by == "Older":
+        search_results = search_results
+    else:
+        #Sort by recent
+        search_results.reverse()
+         
     for product in search_results:
         product['photos'] = [str(photo_id) for photo_id in product['photos']]
     return render_template(
