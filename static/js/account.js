@@ -252,7 +252,7 @@ ratings_btn.addEventListener("click", function(){
         else{
             const message = document.createElement('p');
             message.classList.add('empty-message');
-            message.textContent = "Your wishlist is empty!"
+            message.textContent = "Your review list is empty!"
             mainContent_div.appendChild(message);
         }
     })
