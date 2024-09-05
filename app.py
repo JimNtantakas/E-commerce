@@ -1,13 +1,25 @@
-from flask import Flask, render_template, url_for, redirect, request, session, flash, send_file, jsonify
+from flask import Flask, render_template, url_for, redirect, request, session, flash, jsonify
 from pymongo import MongoClient
 import gridfs
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
+from dotenv import load_dotenv
+import os
 
+
+
+
+load_dotenv()
 app = Flask(__name__)
-app.secret_key = 'Mysecretkey'
 
-client = MongoClient('localhost', 27017)
+SECRET_KEY = os.getenv("MY_SECRET_KEY")
+MONGO_URI = os.getenv("MONGO_URI")
+
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['MONGO_URI'] = MONGO_URI
+
+#client = MongoClient('localhost', 27017)
+client = MongoClient(app.config['MONGO_URI'])
 db = client["flask_database"]
 products = db['products']
 users = db['users']
