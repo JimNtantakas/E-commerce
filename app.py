@@ -16,10 +16,10 @@ SECRET_KEY = os.getenv("MY_SECRET_KEY")
 MONGO_URI = os.getenv("MONGO_URI")
 
 app.config['SECRET_KEY'] = SECRET_KEY
-#app.config['MONGO_URI'] = MONGO_URI
+app.config['MONGO_URI'] = MONGO_URI
 
-client = MongoClient('localhost', 27017)
-#client = MongoClient(app.config['MONGO_URI'])
+#client = MongoClient('localhost', 27017)
+client = MongoClient(app.config['MONGO_URI'])
 db = client["flask_database"]
 products = db['products']
 users = db['users']
@@ -34,7 +34,6 @@ def save_last_visited_page():
 def photo(photo_id):
     photo = fs.get(ObjectId(photo_id))
     return photo
-
 
 
 @app.route("/")
