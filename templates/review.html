@@ -23,6 +23,13 @@
     </div>
 </form>
 
+{% if already_rated %}
+    <form class="delete-review-form" action="/delete-review" method="POST"> 
+        <input type="hidden" name="product_id" value={{product._id}}>
+        <button type="submit" class="delete-review-btn">Delete review</button>
+    </form>
+{% endif %}
+
 {% block scripts %} 
     {{ super() }}
     <script src="{{url_for('static', filename='js/review.js')}}"></script>

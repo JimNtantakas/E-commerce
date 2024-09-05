@@ -5,6 +5,7 @@
     justify-content: center;
     align-items: center;
     padding: 50px;
+    padding-bottom: 0;
 }
 
 #product-image{
@@ -83,4 +84,27 @@
 .publish-review-btn:hover{
     cursor: pointer;
     background-color: darkgreen;
+}
+
+.delete-review-form{
+    display: flex;
+    justify-content: center;
+}
+
+.delete-review-btn{
+    margin-top: 20px;
+    margin-bottom: 50px;
+    border-radius: 30px;
+    background-color: red;
+    color: white;
+    text-align: center;
+    width: 35%;
+    height: 40px;
+    font-size: 20px;
+    border: none;
+}
+
+.delete-review-btn:hover{
+    cursor: pointer;
+    background-color: darkred;
 }
