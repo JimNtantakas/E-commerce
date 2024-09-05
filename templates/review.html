@@ -14,9 +14,9 @@
         </div>
         <div class="segmend second">
             <h3>Rate this product out of 5</h3>
-            <input type="number" step="0.1" max="5" min="0" placeholder="0-5" class="review-number" name="review-rating" value={{rating}} >
+            <input type="number" step="0.1" max="5" min="1" placeholder="1-5" class="review-number" name="review-rating" value={{rating}} required >
             <h3>Write a review</h3>
-            <textarea class="review-text" placeholder="Write a review" maxlength="1500" minlength="30" name="review-text">{{comment}}</textarea>
+            <textarea class="review-text" placeholder="Write a review" maxlength="1500" minlength="30" name="review-text" required>{{comment}}</textarea>
             <p class="char-count">0/1500</p>
         </div>
         <button type="submit" class="publish-review-btn">{% if not already_rated %}Publish review{% else %}Edit review{% endif %}</button>
