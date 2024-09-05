@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/user.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/homepage.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/like-button.css')}}">
+{% endblock  %}
+
+{% block content %}
+
+<div id="user-div">
+    <div class="user-tab tab">
+        <div class="user-info">
+            <i class='bx bxs-user-circle'></i>
+            <span class="user-details">
+                <div class="user-username">{{user['username']}}</div>
+                <div class="user-ratings">
+                    <i class='bx bxs-star'></i>
+                    <span class="total-rating">{{total_rating}}/5 ({{count}} {% if count!=1 %}ratings {% else %}rating{% endif %})</span>
+                </div>
+            </span>
+        </div>
+    </div>
+    <div class="user-products tab">
+        <ul class="published_products-list">
+            {% for product in user_published_products %}
+                <li class="product">
+                    <button id="like-button-{{product._id}}" class="like-button  {% if product._id in user_liked_products %}liked{% endif %}"><i class='bx bx-heart'></i></button>
+                    <a href="/products/{{product._id}}" class="product-details-link"><img class="product-image" src="{{ url_for('photo', photo_id=product.photos[0]) }}" alt="Product Photo"></a>
+                    <span class="title-container-user"><a href="/products/{{product._id}}" class="product-details-link title-text">{{ product.title }}</a></span>
+                    <a href="/products/{{product._id}}" class="product-details-link price"><h2 class="price-container">{{product.price}}€</h2></a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static',filename='js/like-button.js')}}"></script>
+{% endblock %}
+
+{% endblock content %}

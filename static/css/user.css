@@ -1,0 +1,92 @@
+#user-div{
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    justify-content: start;
+    padding: 50px;
+}
+
+
+.segmend{
+    border-bottom: 2px solid grey;
+}
+
+.tab{
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    background-color: white;
+}
+
+
+.bxs-user-circle{
+    font-size: 100px;
+    margin-right: 20px;
+    color: grey;
+}
+
+.user-tab{
+    margin-left: 200px;
+    font-size: 30px;
+    padding: 20px;
+    width: 400px;
+    border-radius: 30px;
+}
+
+.user-info{
+    display: flex;
+    align-items: center;
+}
+
+.user-products{
+    margin-left: 50px;
+    border-radius: 30px;
+}
+
+.user-details{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 300px;
+}
+
+.user-username{
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.bxs-star{
+    font-size: 30px;
+    color: goldenrod;
+}
+
+.user-ratings{
+    margin-top: 20px;
+    align-items: center;
+    display: flex;
+}
+
+.total-rating{
+    margin-left: 6px;
+    margin-top: 6px;
+    font-size: 22px;
+}
+
+.published_products-list{
+    display: flex;
+    max-width: 100%;
+    flex-wrap: wrap;
+}
+
+.product{
+    margin-top: 40px;
+    border: 2px solid black;
+}
+
+.title-container-user{
+    height: 60px;
+}
+
+.user-tab.in-account{
+    margin: 0;
+}
