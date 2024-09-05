@@ -5,9 +5,8 @@
 }
 
 body{
-    min-height: 200vh;
+    min-height: 100vh;
     box-sizing: border-box;
-    background-color: #e2e9f1;
 }
 
 .product-list{
@@ -74,21 +73,23 @@ body{
     overflow-wrap: break-word; 
     padding: 5px; 
     white-space: normal;
+    height: 60px;
     padding: 0 10px;
 }
 
 h2{
-    font-size: 20px;
+    font-size: 22px;
 }
 
 .title-container{
     width: 100%; 
     text-align: center; 
     overflow: auto;
+    height: 200px;
 }
 
 .title-text{
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .product-details-link{
@@ -98,4 +99,8 @@ h2{
 
 .product-details-link:hover{
     text-decoration: underline;
+}
+
+.product-details-link:link, .product-details-link:visited{
+    color:black;
 }
