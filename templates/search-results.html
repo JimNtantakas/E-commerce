@@ -16,15 +16,17 @@
                     <input name="max-price" class="price-input max" type="number" placeholder="To" value={{max_price}}>
                     <button class="price-filter-submit-button" type="submit">></button>
                 </div>
-                <input name="query" type="hidden" value={{query}}>
+                <input name="query" type="hidden" value="{{query}}">
                 <input name="sort_by" type="hidden" id="sort_by" value={{sort_by}}>  <!-- check this value={{sort_by}} -->
                 <h3 class="filter-title">Short by</h3>
                 <div class="dropdown-container">
                     <button type="button" class="sort-button closed">{{sort_by}} <i class='bx bx-chevron-up'></i></button>
                     <ul class="dropdown-list">
                         <li data-value="Recent">Recent</li>
+                        <li data-value="Older">Older</li>
                         <li data-value="Ascending">Ascending</li>
                         <li data-value="Descending">Descending</li>
+                        <li data-value="Rating">Rating</li>
                     </ul>
                 </div>
                 <h3 class="filter-title">Clear filters</h3>
