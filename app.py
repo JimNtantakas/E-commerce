@@ -38,6 +38,9 @@ def get_liked_products():
                     product['_id'] = str(product['_id'])
                     product['photos'] = [str(photo_id) for photo_id in product['photos']]
                     product['seller_id'] = str(product['seller_id'])
+                    product['seller_id'] = str(product['seller_id'])
+                    for rating in product['ratings']:
+                            rating['user_id'] = str(rating['user_id'])
                     user_liked_products.append(product)
     else:
         return "You need to log in"
@@ -49,17 +52,18 @@ def get_cart_products():
         cart_products = []
         user = users.find_one({"username": session["username"]})
         cart_products_ids = user.get('cart_products', [])
-        if len(cart_products_ids)>0:
-            for id in cart_products_ids:
-                product = products.find_one({"_id": ObjectId(id)})
-                if product:
-                    product['liked'] = False
-                    if product['_id'] in get_user_liked_products():
-                        product['liked'] = True
-                    product['_id'] = str(product['_id'])
-                    product['photos'] = [str(photo_id) for photo_id in product['photos']]
-                    product['seller_id'] = str(product['seller_id'])
-                    cart_products.append(product)
+        for id in cart_products_ids:
+            product = products.find_one({"_id": ObjectId(id)})
+            if product:
+                product['liked'] = False
+                if product['_id'] in get_user_liked_products():
+                    product['liked'] = True
+                product['_id'] = str(product['_id'])
+                product['photos'] = [str(photo_id) for photo_id in product['photos']]
+                product['seller_id'] = str(product['seller_id'])
+                for rating in product['ratings']:
+                        rating['user_id'] = str(rating['user_id'])
+                cart_products.append(product)
     else:
         return "You need to log in"
     return cart_products   
@@ -71,24 +75,45 @@ def get_published_products():
         published_products = []
         user = users.find_one({"username": session["username"]})
         published_products_ids = user.get('published_products', [])
-        if len(published_products_ids)>0 :
-            for id in published_products_ids:
-                product = products.find_one({"_id": ObjectId(id)})
-                if product:
-                    product['liked'] = False
-                    if product['_id'] in get_user_liked_products():
-                        product['liked'] = True
-                    product['_id'] = str(product['_id'])
-                    product['photos'] = [str(photo_id) for photo_id in product['photos']]
-                    product['seller_id'] = str(product['seller_id'])
-                    published_products.append(product)
+        for id in published_products_ids:
+            product = products.find_one({"_id": ObjectId(id)})
+            if product:
+                product['liked'] = False
+                if product['_id'] in get_user_liked_products():
+                    product['liked'] = True
+                product['_id'] = str(product['_id'])
+                product['photos'] = [str(photo_id) for photo_id in product['photos']]
+                product['seller_id'] = str(product['seller_id'])
+                for rating in product['ratings']:
+                        rating['user_id'] = str(rating['user_id'])
+                published_products.append(product)
     else:
         return "You need to log in"
 
     return published_products
 
 
-
+@app.route('/rated-products', methods=['GET'])
+def get_rated_products():
+    if session.get('username'):
+        rated_products = []
+        user = users.find_one({"username": session["username"]})
+        rated_products_ids = [item['product_id'] for item in user.get('rated_products', [])]
+        for id in rated_products_ids:
+            product = products.find_one({"_id": ObjectId(id)})
+            if product:
+                product['total_rating'] = product_total_rating(product['_id'])
+                product['_id'] = str(product['_id'])
+                product['photos'] = [str(photo_id) for photo_id in product['photos']]
+                product['seller_id'] = str(product['seller_id'])
+                for rating in product['ratings']:
+                    rating['user_id'] = str(rating['user_id'])
+                rated_products.append(product)
+    else:
+        return "You need to log in"
+    return rated_products
+        
+        
 def get_user_liked_products():
     user_liked_products=[]
     if session.get("username"):
@@ -155,8 +180,19 @@ def selling():
 def submit_review():
     user = users.find_one({'username': session.get("username")})
     product_id = request.form.get('product_id')
-    rating = request.form.get('review-rating')
+    rating = float(request.form.get('review-rating'))
     text = request.form.get('review-text')
+    
+    new_rated_product = {
+        "product_id": ObjectId(product_id), 
+        "rating": rating,
+        "comment": text
+    }
+    users.update_one(
+        {"_id": user['_id']},
+        {"$push": {"rated_products": new_rated_product}}
+    )
+    
     new_rating = {
         "user_id": user['_id'], 
         "rating": rating,
@@ -173,18 +209,46 @@ def submit_review():
 def edit_review():
     user = users.find_one({'username': session.get("username")})
     product_id = request.form.get('product_id')
-    rating = request.form.get('review-rating')
+    rating = float(request.form.get('review-rating'))
     text = request.form.get('review-text')
-    edited_rating = {
-            "user_id": user['_id'], 
-            "rating": rating,
-            "comment": text
-        }
+    
+    new_edited_product = {
+        "product_id": ObjectId(product_id), 
+        "rating": rating,
+        "comment": text
+    }
+    users.update_one(
+        {"_id": user['_id'], "rated_products.product_id": ObjectId(product_id)},
+        {"$set": {
+            "rated_products.$.rating": new_edited_product["rating"],
+            "rated_products.$.comment": new_edited_product["comment"]
+        }}
+    )
+    
+
     products.update_one(
         {"_id": ObjectId(product_id), "ratings.user_id": user['_id']},
         {"$set": {"ratings.$.rating": rating, "ratings.$.comment": text}}
     )
     return redirect(url_for("product_details",product_id=product_id))
+
+
+@app.route("/delete-review", methods=['POST'])
+def delete_review():
+    user = users.find_one({"username": session.get("username")})
+    product_id = request.form.get('product_id')
+        
+    users.update_one(
+        {"_id": user['_id']},
+        {"$pull": {"rated_products": {"product_id": ObjectId(product_id)}}}
+    )
+    
+    products.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$pull": {"ratings": {"user_id": user['_id']}}}
+    )
+    return redirect(url_for("product_details",product_id=product_id))
+
 
 @app.route("/submit", methods=['POST'])
 def submit():
@@ -194,6 +258,7 @@ def submit():
     title = request.form.get("title")
     categories = request.form.getlist("categories[]")
     description = request.form.get("description")
+    ratings = []
     
     photo_ids = []
     main_image = request.files.get('main-image')
@@ -216,7 +281,8 @@ def submit():
                "seller_id": seller_id,
                "quantity": int(quantity),
                "price": str(price),
-               "views": 0
+               "views": 0,
+               "ratings": ratings
                }
     products.insert_one(product)
     users.update_one(
@@ -235,23 +301,50 @@ def submit_changes():
     title = request.form.get("title")
     categories = request.form.getlist("categories[]")
     description = request.form.get("description")
-    photo_ids = []
+    
+    
     main_image = request.files.get('main-image')
+    photo_ids = []
+    
+    delete_image_ids = request.form.getlist('delete-images')
+    if delete_image_ids:
+        #remove all the checked images
+        for image_id in delete_image_ids:
+            fs.delete(ObjectId(image_id))
+            products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$pull": {"photos": ObjectId(image_id)}}
+            )
+    product = products.find_one({"_id": ObjectId(product_id)})
+    
+    
     if main_image:
+        # if main_image changes put it first
         photo_id = fs.put(main_image, filename=main_image.filename)
         photo_ids.append(photo_id)
+        print(photo_ids)
+        i = 0
+        for photo_id in product['photos']:
+            #if i == 0:
+            #    continue
+            photo_ids.append(photo_id)
+        print(photo_ids)
+    else:
+        for photo_id in product['photos']:
+            photo_ids.append(photo_id)
+            
+    
+
     files = request.files.getlist('photos')
-    quantity = request.form.get('quantity')
-    price = request.form.get('price')
-    
-    for photo_id in product['photos']:
-        fs.delete(ObjectId(photo_id))
-    
     for file in files:
         if file:
             photo_id = fs.put(file, filename=file.filename)
             photo_ids.append(photo_id)
     
+    #for photo_id in product['photos']:
+        #fs.delete(ObjectId(photo_id))    
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
     updated_product = {
         "title": title,
         "categories": categories,
@@ -285,8 +378,10 @@ def submit_informations(product_id):
 @app.route("/account")
 def account():
     if session.get("username"):
+        user = users.find_one({"username": session.get("username")})
         liked = get_liked_products()
-        return render_template("account.html",x="Account",liked_products=liked, page="account", products_in_cart = get_cart_products_number())
+        total_rating, count = user_total_rating(user['_id'])
+        return render_template("account.html",x="Account",liked_products=liked, page="account", products_in_cart=get_cart_products_number(), user=user, total_rating=total_rating, count=count)
     else:
         return redirect(url_for('login'))
 
@@ -320,7 +415,8 @@ def register():
             "liked_products": [],
             "cart_products": [],
             "orders": [],
-            "published_products": []
+            "published_products": [],
+            "rated_products": []
             })
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('home'))
@@ -366,14 +462,42 @@ def like():
 
 
 
-
-
 @app.route("/logout")
 def logout():
     session.pop("username", None)
     return redirect(url_for('home'))
 
     
+
+def user_total_rating(user_id):
+    user = users.find_one({"_id": ObjectId(user_id)})
+    total_rating = "-"
+    count = 0
+    sum = 0
+    for published_product in user['published_products']:
+        product = products.find_one({"_id": ObjectId(published_product)})
+        if user['_id'] == product['seller_id']:
+            for rating in product['ratings']:
+                if rating['rating']:
+                    sum += rating['rating']
+                    count += 1           
+    if count > 0 :
+        total_rating = round(sum / count, 1)    
+    return total_rating,count
+
+
+def product_total_rating(product_id):
+    product = products.find_one({"_id": ObjectId(product_id)})
+    total_rating = "-"
+    count = 0
+    sum = 0
+    for rating in product['ratings']:
+        if rating['rating']:
+            sum += rating['rating']
+            count += 1    
+    if count > 0 :
+        total_rating = round(sum / count, 1)    
+    return total_rating
 
 @app.route("/products/<product_id>")
 def product_details(product_id):
@@ -392,6 +516,8 @@ def product_details(product_id):
                 user_id = rating['user_id']
                 if user['_id'] == ObjectId(user_id):
                     already_rated = True
+                             
+        total_rating = product_total_rating(product_id)       
                 
         products.find_one_and_update(
             {"_id":ObjectId(product_id)},
@@ -414,12 +540,15 @@ def product_details(product_id):
             owned = owned,
             already_rated = already_rated,
             product=product,
+            seller = users.find_one({"_id": product['seller_id']}),
             x="Account" if session.get("username") else "Login",
             page="account" if session.get("username") else "login",
             liked= liked,
             products_in_cart = get_cart_products_number(),
             in_cart = added_in_cart,
-            logged = logged
+            logged = logged,
+            count = len(product['ratings']),
+            total_rating = total_rating
         )
     else:
         return "Product not found, 404", 404
@@ -468,9 +597,7 @@ def search():
     
     words = query.split()
     keyword_to_category = {
-        "phone": "Phones",
-        "tablet": "Tablets",
-        "laptop": "Computers",
+        "phone": "Phones","tablet": "Tablets","laptop": "Computers","dog": "Dogs","cat": "Cats","football": "Sports"
         # Add more keyword-to-category mappings as needed
     }
     
@@ -545,8 +672,15 @@ def categories():
 @app.route("/products/edit/<product_id>", methods=['GET'])
 def edit(product_id):
     product = products.find_one({"_id": ObjectId(product_id)})
+    filenames = []
+    for image_id in product['photos']:
+        image = fs.find_one({"_id": image_id})
+        if image:
+            filenames.append(image.filename)
+    
     return render_template(
         "edit-product.html",
+        filenames = filenames,
         x="Account" if session.get("username") else "Login",
         page="account" if session.get("username") else "login",
         categories= list(get_categories()),
@@ -612,6 +746,56 @@ def review(product_id):
         else:
             return "Product not found, 404", 404 
     return redirect(url_for('home'))
+
+
+
+@app.route("/user/<user_id>")
+def user_display(user_id):
+    user = users.find_one({"_id": ObjectId(user_id)})
+    user_published_products = []
+    for product_id in user['published_products']:
+        product = products.find_one({"_id": ObjectId(product_id)})
+        if product:
+            product['photos'] = [str(photo_id) for photo_id in product['photos']]
+            product['seller_id'] = str(product['seller_id'])
+            user_published_products.append(product)
+    total_rating, count = user_total_rating(user['_id'])
+    return render_template(
+        "user.html",
+        user = user,
+        user_published_products = user_published_products,
+        total_rating = total_rating,
+        count = count,
+        x="Account" if session.get("username") else "Login",
+        page="account" if session.get("username") else "login",
+        user_liked_products=get_user_liked_products(),
+        products_in_cart = get_cart_products_number()
+    )
+
+
+@app.route("/reviews/<product_id>")
+def all_reviews(product_id):
+    product = products.find_one({"_id": ObjectId(product_id)})
+    all_users_reviewed = []
+    for rating in product['ratings']:
+        user = users.find_one({"_id": rating['user_id']})
+        all_users_reviewed.append(user)
+
+    return render_template(
+        "all-reviews.html",
+        product = product,
+        all_users_reviewed = all_users_reviewed,
+        x="Account" if session.get("username") else "Login",
+        page="account" if session.get("username") else "login",
+        products_in_cart = get_cart_products_number()
+    )
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
