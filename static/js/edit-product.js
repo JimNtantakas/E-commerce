@@ -8,7 +8,6 @@ const updateCharacterCount = () => {
 };
 
 description.addEventListener('input', updateCharacterCount);
-
 updateCharacterCount();
 
 
@@ -138,7 +137,9 @@ container.addEventListener("change", function(event){
 
 document.getElementById('product-form').addEventListener('submit', function(event) {
     const main_image = document.getElementById('main-image');
-    if (main_image.files.length === 0) {
+    const main_img_checkbox = document.getElementById('0');
+
+    if (main_image.files.length === 0  && main_img_checkbox.checked) {
         event.preventDefault(); 
         alert('Please upload at least one main image.');
     }

@@ -245,3 +245,38 @@ label.upload-images{
 .check-box:hover{
     cursor: pointer;
 }
+
+#existing-images li{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    background-color: rgb(217, 217, 217);
+    border-radius: 30px;
+    border: 2px solid grey;
+}
+
+
+#existing-images{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.filename{
+    word-wrap: break-word;
+    margin-left: 20px;
+}
+
+
+input[type="checkbox"]:hover{
+    cursor: pointer;
+}
+
+
+input[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+
+}

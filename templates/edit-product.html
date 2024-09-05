@@ -28,8 +28,24 @@
                 <label for="images" class="upload-images"><i class='bx bx-upload'></i><div class="label-text">Upload the other images</div></label>
                 <div id="file-list"></div>
             </div>    
+
+            <div>
+                <h3>Delete current images:</h3>
+                <ul id="existing-images">
+                    {% for image in product.photos %}
+                        <h4>{% if loop.index0 ==0 %}Main image {% elif loop.index0 ==1 %} Other images{% endif %}</h4>
+                        <li>
+                            <input type="checkbox" name="delete-images" value="{{ image}}" id={{loop.index0}}>
+                            <img src="{{url_for('photo',photo_id=image)}}" width="100px">
+                            <span class="filename">{{ filenames[loop.index0] }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
         </div>
         </div>
+
 
         <div class="dropdown-container form-items">
             <h3>Select Categories and tags</h3>
