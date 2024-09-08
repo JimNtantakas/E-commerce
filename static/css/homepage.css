@@ -118,3 +118,30 @@ h2{
 .list-icon-title{
     margin-left: 30px;
 }
+
+
+.list-title-link{
+    color:blue ;
+    display: flex;
+    width: fit-content;
+}
+
+.list-title-link:visited{
+    color: blue;
+}
+
+.view-all-btn{
+    border-radius: 50px;
+    border: 2px solid black;
+    height: 80px;
+    width: 80px;
+    font-size: 20px;
+}
+
+.view-all-container{
+    align-self: center;
+}
+
+.view-all-btn:hover{
+    cursor: pointer;
+}

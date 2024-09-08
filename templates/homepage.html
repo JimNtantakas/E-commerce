@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+
+<title>{% block title %}Homepage{% endblock %}</title>
 {% block css%}
 <link rel="stylesheet" href="./static/css/homepage.css">
 <link rel="stylesheet" href="./static/css/like-button.css">
@@ -6,11 +8,12 @@
 {% block content %}
 
 <div id="homepage-body">
+    {% set max_products = 10 %}
 
     <div class="frame">
         <a href="/search?query=latest+listings" class="list-title-link"><h1 class="list-icon-title"><i class='bx bx-time-five'></i>Latest listings</h1></a>
         <ul class="product-list">
-            {% for product in products | reverse %}
+            {% for product in products[:max_products] %}
                 {% if product.quantity > 0 %}
                     <li class="product">
                         <button id="like-button-{{product._id}}" class="like-button  {% if product._id in user_liked_products %}liked{% endif %}"><i class='bx bx-heart'></i></button>
@@ -20,13 +23,18 @@
                     </li>
                 {% endif %}
             {% endfor %}
+            {% if products | length > max_products %}
+                <div class="view-all-container">
+                    <a href="/search?query=latest+listings" class="view-all-container"> <button class="view-all-btn">></button> </a>
+                </div>
+            {% endif %}
         </ul>
     </div>
 
     <div class="frame">
-        <a href="/search?query=top+rated" class="list-title-link"><h1 class="list-icon-title"><i class='bx bx-star'></i>Top rated</h1><a>
+        <a href="/search?query=top+rated&sort_by=Rating" class="list-title-link"><h1 class="list-icon-title"><i class='bx bx-star'></i>Top rated</h1><a>
         <ul class="product-list">
-            {% for product in products_sorted_by_rating %}
+            {% for product in products_sorted_by_rating[:max_products] %}
                 {% if product.quantity > 0 %}
                     <li class="product">
                         <button id="like-button-{{product._id}}" class="like-button  {% if product._id in user_liked_products %}liked{% endif %}"><i class='bx bx-heart'></i></button>
@@ -36,13 +44,18 @@
                     </li>
                 {% endif %}
             {% endfor %}
+            {% if products_sorted_by_rating | length > max_products %}
+                <div class="view-all-container">
+                    <a href="/search?query=top+rated&sort_by=Rating" class="view-all-container"> <button class="view-all-btn">></button> </a>
+                </div>
+            {% endif %}
         </ul>
     </div>
 
     <div class="frame">
-        <a href="/search?query=most+viewed" class="list-title-link"><h1 class="list-icon-title"><i class='bx bx-glasses-alt'></i>Most viewed</h1></a>
+        <a href="/search?query=most+viewed&sort_by=Views" class="list-title-link"><h1 class="list-icon-title"><i class='bx bx-glasses-alt'></i>Most viewed</h1></a>
         <ul class="product-list">
-            {% for product in most_viewed_products %}
+            {% for product in most_viewed_products[:max_products] %}
                 {% if product.quantity > 0 %}
                     <li class="product">
                         <button id="like-button-{{product._id}}" class="like-button  {% if product._id in user_liked_products %}liked{% endif %}"><i class='bx bx-heart'></i></button>
@@ -52,6 +65,11 @@
                     </li>
                 {% endif %}
             {% endfor %}
+            {% if most_viewed_products | length > max_products %}
+                <div class="view-all-container">
+                    <a href="/search?query=most+viewed&sort_by=Views" class="view-all-container"> <button class="view-all-btn">></button> </a>
+                </div>
+            {% endif %}
         </ul>
     </div>
 
