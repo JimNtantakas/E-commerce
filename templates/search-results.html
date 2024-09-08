@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+<title>{% block title %}Search results{% endblock %}</title>
 {% block css%}
 <link rel="stylesheet" href="./static/css/search-results.css">
 <link rel="stylesheet" href="./static/css/like-button.css">
@@ -24,9 +25,10 @@
                     <ul class="dropdown-list">
                         <li data-value="Recent">Recent</li>
                         <li data-value="Older">Older</li>
-                        <li data-value="Ascending">Ascending</li>
-                        <li data-value="Descending">Descending</li>
+                        <li data-value="Ascending">Price Ascending</li>
+                        <li data-value="Descending">Price Descending</li>
                         <li data-value="Rating">Rating</li>
+                        <li data-value="Views">Views</li>
                     </ul>
                 </div>
                 <h3 class="filter-title">Clear filters</h3>

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+<title>{% block title %}Sell your product{% endblock %}</title>
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selling.css') }}">
 {% endblock %}
@@ -47,16 +48,16 @@
 
         <div class="form-items">
             <h3>Write a description</h3>
-            <textarea class="form-inputs description" name='description' placeholder="Write a description" maxlength="1000" minlength="5" required></textarea>
-            <p class="char-count">0/1000</p>
+            <textarea class="form-inputs description" name='description' placeholder="Write a description" maxlength="1500" minlength="5" required></textarea>
+            <p class="char-count">0/1500</p>
         </div>
         <div class="form-items">
             <h3>Quantity of the product</h3>
-            <input type="number" step="0.1" class="form-inputs" placeholder="Quantity" name="quantity">
+            <input type="number" step="1" class="form-inputs" placeholder="Quantity" name="quantity" min="0" required>
         </div>
         <div class="form-items">
             <h3>Price of the product</h3>
-            <input type="number" step="0.1" class="form-inputs" placeholder="Price" name="price">
+            <input type="number" step="0.1" class="form-inputs" placeholder="Price" name="price" min="1" required>
         </div>
         <button type="submit" class="submit-button">Submit</button>
         

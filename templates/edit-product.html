@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+<title>{% block title %}Edit product {{product.title}}{% endblock %}</title>
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selling.css') }}">
 {% endblock %}
@@ -35,7 +36,7 @@
                     {% for image in product.photos %}
                         <h4>{% if loop.index0 ==0 %}Main image {% elif loop.index0 ==1 %} Other images{% endif %}</h4>
                         <li>
-                            <input type="checkbox" name="delete-images" value="{{ image}}" id={{loop.index0}}>
+                            <input type="checkbox" name="delete-images" value="{{ image}}" id="{{loop.index0}}">
                             <img src="{{url_for('photo',photo_id=image)}}" width="100px">
                             <span class="filename">{{ filenames[loop.index0] }}</span>
                         </li>
@@ -44,7 +45,7 @@
             </div>
 
         </div>
-        </div>
+    </div>
 
 
         <div class="dropdown-container form-items">
@@ -55,7 +56,7 @@
                 <li><p class="category-class">{{categories[i].name}}<p></li>
                     {% for subcategory in categories[i].subcategories %}
                         <li class="subcategory" categoryClass="{{categories[i].name}}">
-                            <input class="check-box" type="checkbox" name="categories[]" value={{subcategory}}  {% if subcategory in product_categories %} checked {% endif %} >{{subcategory}}
+                            <input class="check-box" type="checkbox" name="categories[]" value="{{subcategory}}"  {% if subcategory in product_categories %} checked {% endif %} >{{subcategory}}
                         </li>
                     {% endfor %}
                 {% endfor %}
@@ -71,11 +72,11 @@
         </div>
         <div class="form-items">
             <h3>Quantity of the product</h3>
-            <input type="number" step="0.01" class="form-inputs" placeholder="Quantity" name="quantity" value={{product.quantity}}>
+            <input type="number" step="1" class="form-inputs" placeholder="Quantity" name="quantity" value={{product.quantity}} min="1" required>
         </div>
         <div class="form-items">
             <h3>Price of the product</h3>
-            <input type="number" step="0.01" class="form-inputs" placeholder="Price" name="price" value={{product.price}}>
+            <input type="number" step="0.01" class="form-inputs" placeholder="Price" name="price" value={{product.price}} min="1" required>
         </div>
         <button type="submit" class="submit-button">Submit changes</button>
         

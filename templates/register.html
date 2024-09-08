@@ -6,6 +6,7 @@
     <link href="./static/css/register.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.ico') }}" type="image/x-icon"/>
+    <title>Register</title>
 </head>
 <body>
     <div class="register-div">
@@ -27,15 +28,12 @@
             {% endwith %}
             {% block body %}{% endblock %}
             <div class="input-box">
-                <input type="text" name="username" placeholder="Username" minlength="8" required>
+                <input type="text" name="username" placeholder="Username" pattern="^\S+$" minlength="8" title="Username must be at least 8 characters and cannot contain spaces." required>
                 <i class='bx bxs-user-circle'></i>
             </div>
             <div class="input-box">
                 <input type="password" name="password" placeholder="Password" minlength="8" required>
                 <i class='bx bxs-lock-alt'></i>
-            </div>
-            <div class="remember-me">
-                <label> <input type="checkbox"> Remember me </label>
             </div>
             <button type="submit" class="register-button">Sign up</button>
         </form>

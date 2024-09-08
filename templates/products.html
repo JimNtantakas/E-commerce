@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+
+<title>{% block title %}{{product.title}}{% endblock %}</title>
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static',filename='css/like-button.css')}}">
 <link rel="stylesheet" href="{{url_for('static',filename='css/products.css')}}">
@@ -50,7 +52,11 @@
                 <div class="rate-this-product">
                     {% if not owned %}
                         <i class='bx bxs-pencil'></i>
-                        <a href="/review/{{product._id}}">{% if not already_rated %}Rate this product {% else %}Edit your review on this product {% endif %}</a>                   
+                        {% if logged %}
+                            <a href="/review/{{product._id}}">{% if not already_rated %}Rate this product {% else %}Edit your review on this product {% endif %}</a>       
+                        {% else %}           
+                            <a href="/review/{{product._id}}">{% if not already_rated %}Rate this product {% else %}Edit your review on this product {% endif %}</a>  
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

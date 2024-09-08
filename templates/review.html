@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+<title>{% block title %}Review {{product.title}}{% endblock %}</title>
 {% block css%}
 <link rel="stylesheet" href="{{url_for('static',filename='css/review.css')}}">
 {%endblock%}
@@ -26,7 +27,7 @@
 {% if already_rated %}
     <form class="delete-review-form" action="/delete-review" method="POST"> 
         <input type="hidden" name="product_id" value={{product._id}}>
-        <button type="submit" class="delete-review-btn">Delete review</button>
+        <button type="submit" class="delete-review-btn" onclick="return confirm('Are you sure you want to delete your review?');">Delete review</button>
     </form>
 {% endif %}
 

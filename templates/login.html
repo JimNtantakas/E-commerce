@@ -6,6 +6,7 @@
     <link href="./static/css/login.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.ico') }}" type="image/x-icon"/>
+    <title>Login</title>
 </head>
 
 <body>
@@ -36,7 +37,7 @@
                 <i class='bx bxs-lock-alt'></i>
             </div>
             <div class="remember-me">
-                <label> <input type="checkbox"> Remember me </label>
+                <label> <input type="checkbox" name="remember-me"> Remember me </label>
                 <a href="#">Forgot password?</a>
             </div>
             <button type="submit" class="login-button">Login</button>

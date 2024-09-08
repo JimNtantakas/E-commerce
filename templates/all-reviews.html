@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+
+<title>{% block title %}All reviews {{product.title}} {% endblock %}</title>
 {% block css%}
 <link rel="stylesheet" href="{{url_for('static',filename='css/review.css')}}">
 <link rel="stylesheet" href="{{url_for('static',filename='css/all-reviews.css')}}">
