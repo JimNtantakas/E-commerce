@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.ico') }}" type="image/x-icon"/>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}E-commerce{% endblock %}</title>
     {% block css %}{% endblock %}
 </head>
 <body>
@@ -39,6 +39,11 @@
     {% endblock %}
 
     {%endblock%}
+
+    <footer id="footer">
+        <span id="project-title">E-commerce project</span>
+        <span id="creator"> <a href="https://github.com/JimNtantakas" id="creator-github-link"> By Dimitris Ntantakas <i class='bx bxl-github'></i>  </a> </span>
+    </footer>
 
 </body>
 </html>
