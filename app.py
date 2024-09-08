@@ -1,10 +1,11 @@
-from flask import Flask, render_template, url_for, redirect, request, session, flash, jsonify
+from flask import Flask, render_template, url_for, redirect, request, session, flash, jsonify, current_app as app
 from pymongo import MongoClient
 import gridfs
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 import os
+from datetime import timedelta
 
 
 
@@ -38,8 +39,8 @@ def photo(photo_id):
 
 @app.route("/")
 def home():
-    all_products = products.find()
-    
+    all_products = list(products.find())
+    all_products.reverse()
     rated_products = products.find(({"total_rating": {"$ne": ""}}))
     products_sorted_by_rating = rated_products.sort("total_rating", -1)
     most_viewed_products = products.find().sort("views", -1)
@@ -48,9 +49,9 @@ def home():
         "homepage.html",
         x="Account" if session.get("username") else "Login",
         page="account" if session.get("username") else "login",
-        products=all_products,
-        products_sorted_by_rating = products_sorted_by_rating,
-        most_viewed_products = most_viewed_products,
+        products=list(all_products),
+        products_sorted_by_rating = list(products_sorted_by_rating),
+        most_viewed_products = list(most_viewed_products),
         user_liked_products=get_user_liked_products(),
         products_in_cart = get_cart_products_number()
     )
@@ -190,7 +191,7 @@ def submit():
                "likes": 0,
                "seller_id": seller_id,
                "quantity": int(quantity),
-               "price": str(price),
+               "price": float(price),
                "views": 0,
                "total_rating": 0,
                "ratings": ratings
@@ -259,7 +260,7 @@ def submit_changes():
         "likes": product['likes'],
         "seller_id": product['seller_id'],
         "quantity": int(quantity),
-        "price": str(price),
+        "price": float(price),
         "views": product['views']
     } 
     products.update_one(
@@ -366,17 +367,6 @@ def get_user_liked_products():
     return user_liked_products
 
 
-def get_categories():
-    categories = [
-        {"name": "Fashion", "subcategories": ["Men", "Women", "Kids", "Shoes", "Clothes", "Jewellery", "Fashion Accessories"]},
-        {"name": "Tech", "subcategories": ["Phones", "Tablets", "Computers", "Gaming", "Electronics", "Tech Accessories"]},
-        {"name": "Home - Garden", "subcategories": ["Household Appliances", "Tools", "Furniture", "Lighting", "Cleaning Supplies", "Garden"]},
-        {"name": "Books", "subcategories": ["Literature", "Fiction", "Science", "School", "Fairy Tales", "Comics"]},
-        {"name": "Hobby - Sports", "subcategories": ["Sports", "Camping", "Gym Equipment"]},
-        {"name": "Pets", "subcategories": ["Dogs", "Cats", "Fish", "Birds", "Rodents", "Reptiles"]},
-    ]
-    return categories
-
 def get_cart_products_number():
     if session.get("username"):
         sum = 0
@@ -419,9 +409,16 @@ def login():
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
+        remember_me = request.form.get("remember-me")
         user = users.find_one({"username": username})
         if user and check_password_hash(user['password'], password):
             session['username'] = username
+            if remember_me:
+                session.permanent = True
+                # Extend session lifetime
+                app.permanent_session_lifetime = timedelta(days=30)
+            else:
+                session.permanent = False
             return redirect(session.get('last_url') or url_for('home'))
         else:           
             flash('Invalid username or password!', 'danger')
@@ -524,7 +521,6 @@ def product_total_rating(product_id):
             sum += rating['rating']
             count += 1    
     if count > 0 :
-        print(sum,count)
         total_rating = round(sum / count, 1)  
     return total_rating
 
@@ -605,6 +601,17 @@ def add_to_cart():
     return redirect(url_for('product_details', product_id=product_id))
     
 
+def get_categories():
+    categories = [
+        {"name": "Fashion", "subcategories": ["Men", "Women", "Kids", "Shoes", "Clothes", "Jewellery", "Fashion-Accessories"]},
+        {"name": "Tech", "subcategories": ["Phones", "Tablets", "Computers", "Gaming", "Electronics", "Tech-Accessories"]},
+        {"name": "Home-Garden", "subcategories": ["Household Appliances", "Tools", "Furniture", "Lighting", "Cleaning Supplies", "Garden"]},
+        {"name": "Books", "subcategories": ["Literature", "Fiction", "Science", "School", "Fairy Tales", "Comics"]},
+        {"name": "Hobby - Sports", "subcategories": ["Sports", "Camping", "Gym Equipment"]},
+        {"name": "Pets", "subcategories": ["Dogs", "Cats", "Fish", "Birds", "Rodents", "Reptiles"]},
+    ]
+    return categories
+
 
 @app.route("/search", methods=['GET'])
 def search():
@@ -624,14 +631,9 @@ def search():
     if len(query) < 3:
         return redirect(url_for('home'))  
     
-    if query == "latest listings":
+    if query == "latest listings" or query=="top rated" or query=="most viewed":
         search_results = products.find()
-    elif query == "top rated":
-        search_results = products.find().sort("total_rating", -1)
-    elif query == "most viewed":
-        search_results = products.find().sort("views", -1)
-    else:
-        
+    else:  
         words = query.split()
         keyword_to_category = {
             "phone": "Phones","smartphone": "Phones","smartphones": "Phones","tablet": "Tablets","ipad": "Tablets","ipads": "Tablets","laptop": "Computers","laptops": "Computers",
@@ -639,10 +641,17 @@ def search():
             # Add more keyword-to-category mappings as needed
         }
         
+        categories = get_categories()
+        major_category_to_subcategories = {category["name"]: category["subcategories"] for category in categories}
+
         for word in words:
             if word.lower() in keyword_to_category:
                 words.append(keyword_to_category[word.lower()])
-                
+            for major_category, subcategories in major_category_to_subcategories.items():
+                if word.lower() == major_category.lower():
+                    # Add all subcategories related to the major category
+                    words.extend(subcategories)
+                    
         regex_pattern = "|".join([f"\\b{word}\\b" for word in words])
         search_results = products.find({    
             "$and":[
@@ -664,17 +673,19 @@ def search():
     if min_price and max_price:
         search_results = []
         for product in results:
-            if int(product['price'])>=int(min_price) and int(product['price'])<=int(max_price):
+            if float(product['price'])>=float(min_price) and float(product['price'])<=float(max_price):
                 search_results.append(product)
-                
+          
     if sort_by == "Ascending":
-        search_results.sort(key=lambda x: int(x['price']))
+        search_results.sort(key=lambda x: (x['price']))
     elif sort_by == "Descending":
-        search_results.sort(key=lambda x: int(x['price']), reverse=True)    
+        search_results.sort(key=lambda x: (x['price']), reverse=True)    
     elif sort_by == "Rating":
         search_results.sort(key=lambda x: (x['total_rating']), reverse=True)    
     elif sort_by == "Older":
         search_results = search_results
+    elif sort_by == "Views":
+        search_results.sort(key=lambda x: (x['views']), reverse=True)  
     else:
         #Sort by recent
         search_results.reverse()
@@ -841,10 +852,42 @@ def all_reviews(product_id):
 
 
 
+@app.route("/change-profile-data", methods=['POST'])
+def change_prof_data():
+    user = users.find_one({"username": session.get("username")})
+    action = request.form.get('action')
+    
+    if action == "delete-account":
+        #remove all products published by the to-be-deleted account
+        for product_id in user['published_products']:
+            products.delete_one(
+                {"_id": ObjectId(product_id)},          
+            )
+        
+        for product_id in user['liked_products']:
+            #remove 1 like for every liked product of the to-be-deleted account
+            products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$inc": {"likes": -1}}
+            )
+            
+        for rating in user['rated_products']:
+            products.update_one(
+                {"_id": ObjectId(rating['product_id'])},
+                {"$pull": {"ratings": {"user_id": user['_id']}}}
+                )
+            
+        users.delete_one({"_id": user["_id"]})
+            
+        
+        return redirect(url_for('logout'))
+    
+    return redirect(url_for('account'))
 
 
-
-
+@app.route("/checkout")
+def checkout():
+    return "<h1>Not implemented yet! </h1>"
 
 
 if __name__ == "__main__":
