@@ -9,6 +9,14 @@ const checkout_btn = document.querySelector('#checkout-btn-link');
 
 const mainContent_div = document.querySelector('#main-content');
 
+document.addEventListener("DOMContentLoaded", ()=>{
+    hideCheckoutButton();
+    mainContent_div.innerHTML = '';
+    mainContent_div.classList.add('show');
+    const clonedUserDiv = document.querySelector('.user-div').cloneNode(true);
+    clonedUserDiv.classList.remove('hidden');
+    mainContent_div.appendChild(clonedUserDiv);
+});
 
 profile_btn.addEventListener("click", function(){
     hideCheckoutButton();
@@ -18,6 +26,9 @@ profile_btn.addEventListener("click", function(){
     clonedUserDiv.classList.remove('hidden');
     mainContent_div.appendChild(clonedUserDiv);
 });
+
+
+
 
 
 function showCheckoutButton() {
@@ -31,6 +42,10 @@ function hideCheckoutButton() {
 orders_btn.addEventListener("click", function(){
     hideCheckoutButton();
     mainContent_div.innerHTML = '';
+    const message = document.createElement('p');
+    message.classList.add('empty-message');
+    message.textContent = "You have no orders yet!"
+    mainContent_div.appendChild(message);
 });
 
 
@@ -72,7 +87,7 @@ wishlist_btn.addEventListener("click", function(){
                 const price = document.createElement('a');
                 price.text = product.price+' €';
                 price.classList.add('product-price','product-details-link');
-                price.href = `'/products/${product._id}'`;
+                price.href = `/products/${product._id}`;
             
                 if (product.photos.length > 0) {
                     const photo_id = product.photos[0];  // Assuming you only want the first photo
@@ -149,7 +164,7 @@ cart_btn.addEventListener("click", function(){
                 const price = document.createElement('a');
                 price.text = product.price+' €';
                 price.classList.add('product-price','product-details-link');
-                price.href = `'/products/${product._id}'`;
+                price.href = `/products/${product._id}`;
             
                 if (product.photos.length > 0) {
                     const photo_id = product.photos[0];  // Assuming you only want the first photo
@@ -342,7 +357,10 @@ my_products_btn.addEventListener("click", function(){
 
 
 logout_btn.addEventListener("click", function(){
-    window.location.href = "/logout";
+    let confirmation = confirm("Are you sure you want to log out?");
+    if (confirmation) {
+        window.location.href = "/logout";
+    }
 });
 
 
