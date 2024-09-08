@@ -1,3 +1,7 @@
+#review-form{
+    min-height: 100vh;
+}
+
 .all-reviews{
     display: flex;
     flex-direction: column;
