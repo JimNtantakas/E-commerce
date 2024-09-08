@@ -1,4 +1,5 @@
 #user-div{
+    min-height: 100vh;
     display: flex;
     flex-direction: row;
     height: fit-content;

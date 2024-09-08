@@ -117,3 +117,8 @@ li.correct {
     text-align: center;
     list-style: none;
 }
+
+
+input[type="checkbox"]:hover{
+    cursor: pointer;
+}

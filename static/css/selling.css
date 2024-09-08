@@ -249,8 +249,8 @@ label.upload-images{
 #existing-images li{
     width: 100%;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    flex-wrap: wrap;
     margin-bottom: 10px;
     background-color: rgb(217, 217, 217);
     border-radius: 30px;
@@ -258,17 +258,20 @@ label.upload-images{
 }
 
 
-#existing-images{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
 
 .filename{
+    width: 60%;
     word-wrap: break-word;
     margin-left: 20px;
 }
 
+#existing-images{
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
 input[type="checkbox"]:hover{
     cursor: pointer;
