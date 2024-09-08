@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+
+<title>{% block title %}Account{% endblock %}</title>
 {% block css%}
 <link rel="stylesheet" href="./static/css/account.css">
 <link rel="stylesheet" href="./static/css/like-button.css">
@@ -40,11 +42,11 @@
                 </div>
             </span>
         </div>
-        <div class="change-info">
-            <a class="change-data">Change username</a> 
-            <a class="change-data">Change password</a> 
-            <a class="change-data delete-acc">Delete account</a> 
-        <div>
+        <form id="change-info" action="/change-profile-data" method="POST">
+             <!--<button type="submit" name="action" value="change-username" class="change-data change-username">Change username</button> 
+            <button type="submit" name="action" value="change-password" class="change-data change-password">Change password</button>  -->
+            <button type="submit" name="action" value="delete-account" class="change-data delete-acc" onclick="return confirm('Are you sure you want to delete your account?');">Delete account</button> 
+        </form>
     </div>
 </div>
 

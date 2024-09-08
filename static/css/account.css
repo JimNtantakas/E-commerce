@@ -196,17 +196,12 @@ li a{
     display: flex;
 }
 
-.change-info{
+#change-info{
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px;
-}
-
-.change-info a{
-    margin-top: 30px;
-    color: rgb(30, 30, 254);
 }
 
 
@@ -242,11 +237,21 @@ li a{
 
 
 .change-data{
-    border-bottom: 2px solid black;
+    border: none;
     width: 75%;
     padding: 15px;
     margin-bottom: 45px;
     text-align: center;
+    margin-top: 30px;
+    background-color: rgb(78, 78, 255);
+    background-color: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 20px;
+}
+
+.change-data:hover{
+    cursor: pointer;
 }
 
 .user-info{
@@ -256,5 +261,6 @@ li a{
 }
 
 .change-data.delete-acc{
-    color: red;
+    background-color: red;
+    color: white;
 }
