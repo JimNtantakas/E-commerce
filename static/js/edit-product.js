@@ -46,7 +46,6 @@ document.getElementById('images').addEventListener("change", function(event){
     else {
         fileListDiv.textContent = 'No files selected.';
     }    
-
 });
 
 
